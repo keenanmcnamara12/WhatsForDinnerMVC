@@ -1,0 +1,34 @@
+﻿@model WhatsForDinnerMVC.Models.Login
+@{
+    ViewBag.Title = "Login";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <link href="@Url.Content("~/Content/bootstrap.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/Site.css")" rel="stylesheet" type="text/css" />
+    <title>Some title</title> <!--#Model.userName-->
+
+</head>
+<body>
+
+    <div class="container">
+        <form id="loginForm" class="form-signin" action="../Login/SubmitAction" method="POST">
+            <h2 class="form-signin-heading">Please sign in</h2>
+            <label for="inputEmail" class="sr-only">Email address</label>
+            <input type="email" name="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+            <label for="inputPassword" class="sr-only">Password</label>
+            <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required>
+            <button class="btn btn-lg btn-primary btn-block" id="loginBtn" type="submit">Sign in</button>
+        </form>
+        
+        <p id="para">@String.Format("userName = {0}  password = {1}", Model.userName, Model.password)</p>
+
+    </div> <!-- /container -->
+
+</body>
+</html>

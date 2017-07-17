@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "Login";
+    ViewBag.Title = "Register";
     Layout = null;
 }
 
@@ -11,13 +11,16 @@
     <link href="@Url.Content("~/Content/bootstrap.css")" rel="stylesheet" type="text/css" />
     <link href="@Url.Content("~/Content/Site.css")" rel="stylesheet" type="text/css" />
     <title>Some title</title> <!--#Model.userName-->
-
 </head>
 <body>
 
+    <div>
+        <!--Placeholder for implementing a mismatch reply message if the username and pw are not in sync-->
+    </div>
+
     <div class="container">
-        <form id="loginForm" class="form-signin" action="../Login/SubmitAction" method="POST">
-            <h2 class="form-signin-heading">Sign in</h2>
+        <form id="loginForm" class="form-signin" action="../Login/SubmitRegister" method="POST">
+            <h2 class="form-signin-heading">Create an account</h2>
             <input type="email" name="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
             <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required>
             <button class="btn btn-lg btn-primary btn-block" id="loginBtn" type="submit">Sign in</button>
@@ -26,10 +29,11 @@
             {
                 <p>@ViewBag.Message</p>
             }
-
-            <p>@Html.ActionLink("Register as a new user", "Register")</p>
+            
+            <p>@Html.ActionLink("Nevermind, back to login", "Index")</p>
 
         </form>
+
     </div> <!-- /container -->
 
 </body>

@@ -9,33 +9,44 @@ namespace WhatsForDinnerMVC.Controllers
 {
     public class LoginController : Controller
     {
-        private string userName = "";
-        private string password = "";
-
-        // GET: Login
         public ActionResult Index()
         {
-            Login login = new Login() { userName = userName, password = password };
-            return View(login);
+            return View();
         }
-
-        //public ActionResult SumbitAction() {
-        //    var login = new Login() { userName = userName, password = password };
-        //    return View("Index", login);
-        //}
 
         [HttpPost]
         public ActionResult SubmitAction(FormCollection collection)
         {
-            //https://stackoverflow.com/questions/5088450/how-to-retrieve-form-values-from-httppost-dictionary-or
-            //https://stackoverflow.com/questions/6995285/how-to-access-my-formcollection-in-action-method-asp-net-mvc
-            userName = collection["email"];
-            password = collection["password"];
-
-            var login = new Login() { userName = userName, password = password};
-
-            return View("Index", login);
+            var user = new User(collection["email"], collection["password"]);
+            // If valid user, direct to the menu page!
+            if (user.IsValid)
+            {
+                return View("Index"); // TODO - go to the page after login.
+            }
+            
+            // Not valid login - reload the login page and display viewmessage. 
+            ViewBag.Message = "Unable to login.";
+            return View("Index");
         }
 
+        public ActionResult Register()
+        {
+            return View("Register");
+        }
+
+        [HttpPost]
+        public ActionResult SubmitRegister(FormCollection collection)
+        {
+            // Attempt to create account.  On Success, set a success view message and direct user to the register.
+            if (false)
+            {
+                ViewBag.Message = "Succesfully created account. You can login now!";
+                return View("Index");
+            }
+
+            // On fail, set a fail view message and direct user to the register page.
+            ViewBag.Message = "Username already taken - failed to create account.";
+            return View("Register");
+        }
     }
 }

@@ -11,7 +11,7 @@ namespace WhatsForDinnerMVC.Controllers
         public ActionResult Index()
         {
             //return View();
-            return RedirectToAction("index", "Login");
+            return RedirectToAction("index", "Login"); 
         }
 
         //public ActionResult About()

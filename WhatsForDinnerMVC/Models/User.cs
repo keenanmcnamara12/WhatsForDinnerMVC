@@ -8,10 +8,17 @@ using System.Web;
 
 namespace WhatsForDinnerMVC.Models
 {
+    /// <summary>
+    /// User object to be the main method for interacting with the user level DB.
+    /// Serializable so the user object can be saved to the session so the data 
+    /// will persist from login to search.
+    /// </summary>
+    [Serializable]
     public class User
     {
         private string myConnectionString = "server=127.0.0.1;uid=root;pwd=password;database=whatsfordinnerdb;";
 
+        #region Properties
         /// <summary>
         /// User's ID
         /// </summary>
@@ -30,18 +37,26 @@ namespace WhatsForDinnerMVC.Models
         /// <summary>
         /// List of menus associated with this user. 
         /// </summary>
-        public List<int> MenuID { get; set; }
+        public int? MenuID { get; set; }
 
         /// <summary>
         /// Indicates if this instance has a valid UserID/Password combination.
         /// </summary>
         public bool IsValid { get; private set; }
+        #endregion
 
-        public User(string UserID, string Name, string Password)
+        #region Constructors
+        public User(string UserID, string Name, string Password, int? MenuID,bool ShouldValidateInDB)
         {
             this.UserID = UserID;
             this.Password = Password;
-            this.Name = Name; 
+            this.Name = Name;
+            this.MenuID = MenuID;
+
+            if (ShouldValidateInDB == false)
+            {
+                IsValid = true;
+            }
 
             try
             {
@@ -58,6 +73,27 @@ namespace WhatsForDinnerMVC.Models
                     }
                 }
                 conn.Close();
+
+                // Let's also load the user's name and menu ID while we're here rather than adding handling to the property to check for an "is null"
+                conn = new MySqlConnection(myConnectionString);
+                conn.Open();
+                using (MySqlCommand sqlCommand = new MySqlCommand("SELECT Name, MenuID FROM User WHERE UserID like @user;", conn))
+                {
+                    sqlCommand.Parameters.AddWithValue("@user", UserID);
+                    MySqlDataReader reader = sqlCommand.ExecuteReader();
+                    reader.Read();
+                    this.Name = (string)reader[0];
+                    if (String.IsNullOrEmpty(reader[1].ToString()))
+                    {
+                        this.MenuID = null;
+                    }
+                    else
+                    {
+                        this.MenuID = (int?)reader[1];
+                    } 
+                }
+                conn.Close();
+                
             }
             catch (MySqlException ex)
             { }
@@ -68,9 +104,14 @@ namespace WhatsForDinnerMVC.Models
         /// </summary>
         /// <param name="UserID"></param>
         /// <param name="Password"></param>
-        public User(string UserID, string Password) : this(UserID, "", Password)
+        public User(string UserID, string Password) : this(UserID, "", Password, null, false)
         { }
 
+        public User(string UserID, string Name, string Password) : this(UserID, "", Password, null, false)
+        { }
+        #endregion
+
+        #region Methods
         public bool CreateNewUser()
         {
             // This user already valid in DB, return
@@ -118,9 +159,9 @@ namespace WhatsForDinnerMVC.Models
             }
             catch (MySqlException ex)
             { }
-
             return false;
         }
+        #endregion
 
     }
 }

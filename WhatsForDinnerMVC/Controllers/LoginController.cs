@@ -22,7 +22,8 @@ namespace WhatsForDinnerMVC.Controllers
             if (user.IsValid)
             {
                 ViewBag.Message = "";
-                return View("Index"); // TODO - go to the page after login.
+                this.Session["User"] = user;  // Save the user object so the search page can recover later.
+                return RedirectToAction("index", "Search");
             }
             
             // Not valid login - reload the login page and display viewmessage. 

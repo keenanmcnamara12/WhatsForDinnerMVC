@@ -21,6 +21,7 @@ namespace WhatsForDinnerMVC.Controllers
             // If valid user, direct to the menu page!
             if (user.IsValid)
             {
+                ViewBag.Message = "";
                 return View("Index"); // TODO - go to the page after login.
             }
             
@@ -37,8 +38,8 @@ namespace WhatsForDinnerMVC.Controllers
         [HttpPost]
         public ActionResult SubmitRegister(FormCollection collection)
         {
-            // Attempt to create account.  On Success, set a success view message and direct user to the register.
-            if (false)
+            var user = new User(collection["email"], collection["name"],collection["password"]);
+            if (user.CreateNewUser())
             {
                 ViewBag.Message = "Succesfully created account. You can login now!";
                 return View("Index");

@@ -10,8 +10,7 @@ namespace WhatsForDinnerMVC.Models
 {
     public class User
     {
-
-        private MySqlConnection connection;
+        private string myConnectionString = "server=127.0.0.1;uid=root;pwd=password;database=whatsfordinnerdb;";
 
         /// <summary>
         /// User's ID
@@ -21,7 +20,7 @@ namespace WhatsForDinnerMVC.Models
         /// <summary>
         /// User's name
         /// </summary>
-        public string UserName { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// User's password
@@ -33,84 +32,95 @@ namespace WhatsForDinnerMVC.Models
         /// </summary>
         public List<int> MenuID { get; set; }
 
+        /// <summary>
+        /// Indicates if this instance has a valid UserID/Password combination.
+        /// </summary>
         public bool IsValid { get; private set; }
 
-        public User(string UserID, string password)
+        public User(string UserID, string Name, string Password)
         {
             this.UserID = UserID;
-            this.Password = password;
-
-            MySqlConnection conn;
-            string myConnectionString;
-
-            myConnectionString = "server=localhost;uid=root;" +
-                "pwd=password;database=WhatsForDinner;";
+            this.Password = Password;
+            this.Name = Name; 
 
             try
             {
-                conn = new MySqlConnection();
-                conn.ConnectionString = myConnectionString;
+                MySqlConnection conn = new MySqlConnection(myConnectionString);
                 conn.Open();
+                using (MySqlCommand sqlCommand = new MySqlCommand("SELECT COUNT(*) FROM User WHERE UserID like @user AND Password like @password;", conn))
+                {
+                    sqlCommand.Parameters.AddWithValue("@user", UserID);
+                    sqlCommand.Parameters.AddWithValue("@password", Password);
+                    long userCount = (long)sqlCommand.ExecuteScalar();
+                    if (userCount > 0)
+                    {
+                        IsValid = true;
+                    }
+                }
+                conn.Close();
             }
-            catch (MySql.Data.MySqlClient.MySqlException ex)
+            catch (MySqlException ex)
+            { }
+        }
+
+        /// <summary>
+        /// Constructor for the login page (don't actually need the user's name).
+        /// </summary>
+        /// <param name="UserID"></param>
+        /// <param name="Password"></param>
+        public User(string UserID, string Password) : this(UserID, "", Password)
+        { }
+
+        public bool CreateNewUser()
+        {
+            // This user already valid in DB, return
+            if (IsValid == true)
+            {
+                return false;
+            }
+
+            try
+            {
+                // Check if the user exists in the database already.
+                MySqlConnection conn = new MySqlConnection(myConnectionString);
+                conn.Open();
+                using (MySqlCommand sqlCommand = new MySqlCommand("SELECT COUNT(*) FROM User WHERE UserID like @user;", conn))
+                {
+                    sqlCommand.Parameters.AddWithValue("@user", UserID);
+                    long userCount = (long)sqlCommand.ExecuteScalar();
+                    if (userCount > 0)
+                    {
+                        conn.Close();
+                        return false;
+                    }
+                }
+                conn.Close();
+
+                // Cool, let's add the UserID/Password to the database.
+                string sqlString = "insert into user (UserID, Name, Password) "
+                                 + "values(@user, @name, @password);";
+                conn = new MySqlConnection(myConnectionString);
+                conn.Open();
+                using (MySqlCommand sqlCommand = new MySqlCommand(sqlString, conn))
+                {
+                    sqlCommand.Parameters.AddWithValue("@user", UserID);
+                    sqlCommand.Parameters.AddWithValue("@name", Name);
+                    sqlCommand.Parameters.AddWithValue("@password", Password);
+                    int rowAffected = sqlCommand.ExecuteNonQuery();
+                    if (rowAffected > 0)
+                    {
+                        IsValid = true;
+                        conn.Close();
+                        return true;
+                    }
+                }
+                conn.Close();
+            }
+            catch (MySqlException ex)
             { }
 
-
-
-
-            //Initialize values
-            string server;
-            string database;
-            string uid;
-            string sqlPassword;
-            server = "localhost";
-            database = "WhatsForDinnerDB";
-            uid = "root";
-            sqlPassword = "";
-            string connectionString;
-            connectionString = "SERVER=" + server + ";" + "DATABASE=" +
-            database + ";" + "UID=" + uid + ";" + "PASSWORD=" + sqlPassword + ";";
-
-            connection = new MySqlConnection(connectionString);
-
-            string query = "SELECT * FROM User";
-
-            connection.Open();
-
-
-
-
-
-            //Create Command
-            MySqlCommand cmd = new MySqlCommand(query, connection);
-                //Create a data reader and Execute the command
-                MySqlDataReader dataReader = cmd.ExecuteReader();
-
-                //Read the data and store them in the list
-                //while (dataReader.Read())
-                //{
-                //    list[0].Add(dataReader["id"] + "");
-                //    list[1].Add(dataReader["name"] + "");
-                //    list[2].Add(dataReader["age"] + "");
-                //}
-
-                //close Data Reader
-                dataReader.Close();
-
-                //close Connection
-                connection.Close();
-
-            
-
-            // TODO - check for the user in the DB and matching password
-            if (true)
-            {
-                IsValid = true;
-            }
-            else
-            {
-                IsValid = false;
-            }
+            return false;
         }
+
     }
 }

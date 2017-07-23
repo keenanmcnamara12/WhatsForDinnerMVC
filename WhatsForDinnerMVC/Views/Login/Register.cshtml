@@ -22,8 +22,9 @@
         <form id="loginForm" class="form-signin" action="../Login/SubmitRegister" method="POST">
             <h2 class="form-signin-heading">Create an account</h2>
             <input type="email" name="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+            <input name="name" id="inputName" class="form-control" placeholder="Full Name" required autofocus>
             <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required>
-            <button class="btn btn-lg btn-primary btn-block" id="loginBtn" type="submit">Sign in</button>
+            <button class="btn btn-lg btn-primary btn-block" id="loginBtn" type="submit">Register</button>
 
             @if (ViewBag.Message != null)
             {

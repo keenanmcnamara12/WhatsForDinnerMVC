@@ -24,8 +24,20 @@ namespace WhatsForDinnerMVC.Controllers
             ViewBag.Message = "Hello " + name;
 
             SearchTester searchTester = new SearchTester();
+            searchTester.PopulateAllUsers();
 
             return View(searchTester);
         }
+
+        [HttpPost]
+        public ActionResult SearchSubmitAction(FormCollection collection)
+        {
+            string searchString = collection["searchString"];
+
+            SearchTester searchTester = new SearchTester();
+            searchTester.PerformSearch(searchString);
+            return View("Index", searchTester);
+        }
+
     }
 }

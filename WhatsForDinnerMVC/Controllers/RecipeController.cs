@@ -12,8 +12,7 @@ namespace WhatsForDinnerMVC.Controllers
         // GET: Recipe/Add
         public ActionResult Add()
         {
-            var recipe = new Recipe() { Name = "KTM testing recipe" };
-            return View(recipe);
+            return View();
         }
 
         public ActionResult Testing(int? pageIndex, string sortBy)

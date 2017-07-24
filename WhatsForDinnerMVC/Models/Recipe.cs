@@ -7,7 +7,13 @@ namespace WhatsForDinnerMVC.Models
 {
     public class Recipe
     {
-        public int Id { get; set; }
+        public int ID { get; set; }
         public string Name { get; set; }
+
+        public Recipe(int recipeID)
+        {
+            this.ID = recipeID; 
+        }
+
     }
 }

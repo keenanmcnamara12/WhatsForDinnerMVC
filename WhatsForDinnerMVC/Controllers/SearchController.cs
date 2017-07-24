@@ -25,7 +25,7 @@ namespace WhatsForDinnerMVC.Controllers
 
             SearchTester searchTester = new SearchTester();
             searchTester.PopulateAllUsers();
-
+            Session["searchTester"] = searchTester;
             return View(searchTester);
         }
 
@@ -36,6 +36,22 @@ namespace WhatsForDinnerMVC.Controllers
 
             SearchTester searchTester = new SearchTester();
             searchTester.PerformSearch(searchString);
+            Session["searchTester"] = searchTester;
+            return View("Index", searchTester);
+        }
+
+        [HttpPost]
+        public ActionResult NewMenuName(FormCollection collection)
+        {
+            string newMenuName = collection["newMenuName"];
+
+            SearchTester searchTester = (SearchTester)Session["searchTester"];
+            if (searchTester == null)
+            {
+                searchTester = new SearchTester();
+            }
+
+            
             return View("Index", searchTester);
         }
 

@@ -20,60 +20,106 @@
     </div>
 
     <div class="container">
-        <div class="col-md-12 column ui-sortable">
-            <div class="view">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="view">
                     <nav class="navbar navbar-default" role="navigation">
-                        <!-- Brand and toggle get grouped for better mobile display -->
-                        <div class="navbar-header">
-                            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                                <span class="sr-only">Toggle navigation</span>
-                            </button>
-                        </div>
-
                         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                            <form class="navbar-form navbar-left" action="../Search/SearchSubmitAction" method="POST" role="search">
+                            <form class="navbar-form navbar-left" action="../Search/NewMenuName" method="POST" role="search">
                                 <div class="form-group">
-                                    <input type="text" name="searchString" class="form-control" placeholder="Search">
+                                    <input type="text" name="newMenuName" class="form-control" placeholder="Search">
                                 </div>
-                                <button type="submit" class="btn btn-default">Submit</button>
+                                <button type="submit" class="btn btn-default">New Menu!</button>
                             </form>
                         </div><!-- /.navbar-collapse -->
                     </nav>
-            </div>
-
-            <div class="table-responsive">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>UserID</th>
-                            <th>Name</th>
-                            <th>Password</th>
-                            <th>MenuID</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            @foreach (WhatsForDinnerMVC.Models.User user in Model.Users)
-                            {
-                                <tr>
-                                    <td>@user.UserID</td>
-                                    <td>@user.Name</td>
-                                    <td>@user.Password</td>
-                                    <td>@user.MenuID</td>
-                                </tr>
-                            }
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="box box-element">
-                <div class="view">
-                    <div class="jumbotron" contenteditable="true">
-                        <h2>Hello, world!</h2>
-                        <p>Some additnioal text that goes under the hello world.</p>
-                    </div>
                 </div>
-            </div>
+
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>MenuID</th>
+                                <th>RecipeID</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                @foreach (WhatsForDinnerMVC.Models.User user in Model.Users)
+                                {
+                                    foreach (WhatsForDinnerMVC.Models.Menu menu in user.Menus)
+                                    {
+                                        foreach (WhatsForDinnerMVC.Models.Recipe recipe in menu.Recipes)
+                                        {
+                                        <tr>
+                                            <td>@user.Name</td>
+                                            <td>@menu.MenuID</td>
+                                            <td>@recipe.ID</td>
+                                        </tr>
+                                        }
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+
+                <div class="col-md-8">
+                    <div class="view">
+                        <nav class="navbar navbar-default" role="navigation">
+                            <!-- Brand and toggle get grouped for better mobile display -->
+                            <div class="navbar-header">
+                                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                                    <span class="sr-only">Toggle navigation</span>
+                                </button>
+                            </div>
+
+                            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                                <form class="navbar-form navbar-left" action="../Search/SearchSubmitAction" method="POST" role="search">
+                                    <div class="form-group">
+                                        <input type="text" name="searchString" class="form-control" placeholder="Search">
+                                    </div>
+                                    <button type="submit" class="btn btn-default">Submit</button>
+                                </form>
+                            </div><!-- /.navbar-collapse -->
+                        </nav>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>UserID</th>
+                                    <th>Name</th>
+                                    <th>Password</th>
+                                    <th>MenuID</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    @foreach (WhatsForDinnerMVC.Models.User user in Model.Users)
+                                    {
+                                    <tr>
+                                        <td>@user.UserID</td>
+                                        <td>@user.Name</td>
+                                        <td>@user.Password</td>
+                                    </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="box box-element">
+                            <div class="view">
+                                <div class="jumbotron" contenteditable="true">
+                                    <h2>Hello, world!</h2>
+                                    <p>Some additnioal text that goes under the hello world.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
         </div>
    </div>
 </body>

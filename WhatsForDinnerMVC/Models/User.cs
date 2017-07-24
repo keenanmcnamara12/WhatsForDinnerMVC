@@ -37,7 +37,7 @@ namespace WhatsForDinnerMVC.Models
         /// <summary>
         /// List of menus associated with this user. 
         /// </summary>
-        public int? MenuID { get; set; }
+        public List<Menu> Menus { get; set; }
 
         /// <summary>
         /// Indicates if this instance has a valid UserID/Password combination.
@@ -46,12 +46,12 @@ namespace WhatsForDinnerMVC.Models
         #endregion
 
         #region Constructors
-        public User(string UserID, string Name, string Password, int? MenuID,bool ShouldValidateInDB)
+        public User(string UserID, string Name, string Password, bool ShouldValidateInDB)
         {
             this.UserID = UserID;
             this.Password = Password;
             this.Name = Name;
-            this.MenuID = MenuID;
+            this.Menus = new List<Menu>();
 
             if (ShouldValidateInDB == false)
             {
@@ -77,23 +77,30 @@ namespace WhatsForDinnerMVC.Models
                 // Let's also load the user's name and menu ID while we're here rather than adding handling to the property to check for an "is null"
                 conn = new MySqlConnection(myConnectionString);
                 conn.Open();
-                using (MySqlCommand sqlCommand = new MySqlCommand("SELECT Name, MenuID FROM User WHERE UserID like @user;", conn))
+                using (MySqlCommand sqlCommand = new MySqlCommand("SELECT Name FROM User WHERE UserID like @user;", conn))
                 {
                     sqlCommand.Parameters.AddWithValue("@user", UserID);
                     MySqlDataReader reader = sqlCommand.ExecuteReader();
                     reader.Read();
                     this.Name = (string)reader[0];
-                    if (String.IsNullOrEmpty(reader[1].ToString()))
-                    {
-                        this.MenuID = null;
-                    }
-                    else
-                    {
-                        this.MenuID = (int?)reader[1];
-                    } 
                 }
                 conn.Close();
-                
+
+                conn = new MySqlConnection(myConnectionString);
+                conn.Open();
+                using (MySqlCommand sqlCommand = new MySqlCommand("SELECT MenuID FROM usermenus WHERE UserID like @user;", conn))
+                {
+                    sqlCommand.Parameters.AddWithValue("@user", UserID);
+                    MySqlDataReader reader = sqlCommand.ExecuteReader();
+                    reader.Read();
+                    while (reader.Read())
+                    {
+                        int menuID = (int)reader[0];
+                        Menus.Add(new Menu(menuID));
+                    }
+                }
+                conn.Close();
+
             }
             catch (MySqlException ex)
             { }
@@ -104,10 +111,10 @@ namespace WhatsForDinnerMVC.Models
         /// </summary>
         /// <param name="UserID"></param>
         /// <param name="Password"></param>
-        public User(string UserID, string Password) : this(UserID, "", Password, null, false)
+        public User(string UserID, string Password) : this(UserID, "", Password, false)
         { }
 
-        public User(string UserID, string Name, string Password) : this(UserID, "", Password, null, false)
+        public User(string UserID, string Name, string Password) : this(UserID, "", Password, false)
         { }
         #endregion
 

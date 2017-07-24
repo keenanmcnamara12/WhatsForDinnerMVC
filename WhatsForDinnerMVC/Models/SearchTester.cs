@@ -34,7 +34,7 @@ namespace WhatsForDinnerMVC.Models
                     {
                         // TODO - not sure how to handle the null MenuID yet.
                         //Users.Add(new User((string)reader[0], (string)reader[1], (string)reader[2], (int?)reader[3], false));
-                        Users.Add(new User((string)reader[0], (string)reader[1], (string)reader[2], 0, false));
+                        Users.Add(new User((string)reader[0], (string)reader[1], (string)reader[2], false));
                     }
                 }
                 conn.Close();
@@ -58,7 +58,7 @@ namespace WhatsForDinnerMVC.Models
                     {
                         // TODO - not sure how to handle the null MenuID yet.
                         //Users.Add(new User((string)reader[0], (string)reader[1], (string)reader[2], (int?)reader[3], false));
-                        Users.Add(new User((string)reader[0], (string)reader[1], (string)reader[2], 0, false));
+                        Users.Add(new User((string)reader[0], (string)reader[1], (string)reader[2], false));
                     }
                 }
                 conn.Close();

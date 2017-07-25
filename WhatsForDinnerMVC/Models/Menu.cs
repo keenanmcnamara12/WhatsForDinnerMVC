@@ -2,41 +2,59 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using MySql.Data.MySqlClient;
+using System.Web.Services;
+using System.Data.SqlClient;
+using System.Web.Configuration;
+using System.Data;
 
 namespace WhatsForDinnerMVC.Models
 {
-    [Serializable]
-    public class Menu
-    {
-        private string myConnectionString = "server=127.0.0.1;uid=root;pwd=password;database=whatsfordinnerdb;";
-        public int MenuID;
+	[System.Web.Script.Services.ScriptService]
+	public class Menu
+	{
 
-        public List<Recipe> Recipes {get; set;}
-        
-        public Menu(int MenuID)
-        {
-            this.MenuID = MenuID;
-            Recipes = new List<Recipe>();
+		public int MenuID;
 
-            try
-            {
-                MySqlConnection conn = new MySqlConnection(myConnectionString);
-                conn.Open();
-                using (MySqlCommand sqlCommand = new MySqlCommand("SELECT RecipeID FROM usermenus WHERE MenuID = @menuID;", conn))
-                {
-                    sqlCommand.Parameters.AddWithValue("@menuID", MenuID);
-                    MySqlDataReader reader = sqlCommand.ExecuteReader();
-                    while (reader.Read())
-                    {
-                        Recipes.Add(new Recipe((int)reader[0]));
-                    }
-                    conn.Close();
-                }
-            }
-            catch (MySqlException ex)
-            { }
+		public List<Recipe> Recipes { get; set; }
 
-        }
-    }
+		public Menu(int MenuID)
+		{
+			this.MenuID = MenuID;
+			Recipes = new List<Recipe>();
+			SqlDataReader reader;
+			using (SqlConnection connection = new SqlConnection(WebConfigurationManager.ConnectionStrings["DefaultConnection"].ToString()))
+			{
+				using (SqlCommand cmd = new SqlCommand())
+				{
+					cmd.CommandText = "spGetRecipesFromMenu";
+					cmd.CommandType = CommandType.StoredProcedure;
+					cmd.Connection = connection;
+					cmd.Parameters.AddWithValue("@menuId", MenuID);
+					connection.Open();
+
+					reader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+					if (reader.HasRows)
+					{
+
+						while (reader.Read())
+						{
+							int recipeId;
+
+							if (Int32.TryParse(reader["recipeId"].ToString(), out recipeId))
+							{
+
+								Recipes.Add(new Recipe(recipeId));
+							}
+
+						}
+
+					}
+
+				}
+
+			}
+
+		}
+	}
 }

@@ -190,18 +190,13 @@ namespace WhatsForDinnerMVC.Models
 		public User(string UserID, string Password) : this(UserID, "", Password, false)
 		{ }
 
-		public User(string UserID, string Name, string Password) : this(UserID, "", Password, false)
+		public User(string UserID, string Name, string Password) : this(UserID, Name, Password, false)
 		{ }
 		#endregion
 
 		#region Methods
 		public bool CreateNewUser()
 		{
-			// This user already valid in DB, return
-			if (IsValid == true)
-			{
-				return false;
-			}
 
 			// Check if the user exists in the database already.
 			using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["DefaultConnection"].ToString()))
@@ -249,6 +244,10 @@ namespace WhatsForDinnerMVC.Models
 					sqlCommand.Parameters.AddWithValue("@password", Password);
 					sqlCommand.CommandType = CommandType.StoredProcedure;
 					sqlCommand.Connection = conn;
+
+					conn.Open();
+
+					sqlCommand.ExecuteNonQuery();
 
 					sqlCommand.Connection.Close();
 

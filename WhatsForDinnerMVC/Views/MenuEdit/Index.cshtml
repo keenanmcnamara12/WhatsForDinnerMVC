@@ -1,0 +1,235 @@
+﻿@model WhatsForDinnerMVC.Models.Menu
+@{
+    ViewBag.Title = "Search";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width" />
+    <link href="@Url.Content("~/Content/bootstrap.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/Site.css")" rel="stylesheet" type="text/css" />
+    <title>What's For Dinner Search</title>
+</head>
+<body>
+    <div>
+        @if (!String.IsNullOrWhiteSpace(Model.MenuName))
+            {
+            <h1>
+                @("Editing menu: " + Model.MenuName)
+            </h1>
+        }
+    </div>
+
+    <div class="container" style="max-width: 80%">
+
+
+
+                <div class="row">
+                    <div class="col-md-5">
+                        <div>
+                            <h2>Recipes On Menu</h2>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table" id="recipe-onMenu-table">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Description</th>
+                                        <th>Calories</th>
+                                        <th>Fat</th>
+                                        <th>Protein</th>
+                                        <th>Sodium</th>
+                                        <th>Rating</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        @foreach (WhatsForDinnerMVC.Models.Recipe recipe in Model.Recipes)
+                                        {
+                                        <tr>
+                                            <td id="@recipe.ID">@recipe.Title</td>
+                                            <td>@recipe.Description</td>
+                                            <td>@recipe.Calories;</td>
+                                            <td>@recipe.Fat</td>
+                                            <td>@recipe.Protein</td>
+                                            <td>@recipe.Sodium</td>
+                                            <td>@recipe.Rating</td>
+                                        </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                            <form id="addSelectedRecipeToMenu" class="form-signin" action="../Login/AddSelectedRecipeToMenu" method="POST">
+                                <button class="btn btn-lg btn-primary btn-block" id="addSelectedRecipeToMenu" type="submit">Delete Selected Recipe From Menu?</button>
+                            </form>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-md-7">
+                                    <h2>Search Recipies</h2>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="view">
+                                        <nav class="navbar navbar-default" role="navigation">
+                                            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                                                <form class="navbar-form navbar-left" action="../MenuEdit/PerformSearch" method="POST" role="search">
+                                                    <div class="form-group">
+                                                        <input type="text" name="SearchString" class="form-control" placeholder="Search">
+                                                    </div>
+                                                    <button type="submit" class="btn btn-default">Search!</button>
+                                                </form>
+                                            </div><!-- /.navbar-collapse -->
+                                        </nav>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="table-responsive">
+                                <table class="table" id="recipe-inSearch-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Description</th>
+                                            <th>Calories</th>
+                                            <th>Fat</th>
+                                            <th>Protein</th>
+                                            <th>Sodium</th>
+                                            <th>Rating</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            @foreach (WhatsForDinnerMVC.Models.Recipe recipe in Model.SearchRecipeResults)
+                                            {
+                                            <tr>
+                                                <td id="@recipe.ID">@recipe.Title</td>
+                                                <td>@recipe.Description</td>
+                                                <td>@recipe.Calories;</td>
+                                                <td>@recipe.Fat</td>
+                                                <td>@recipe.Protein</td>
+                                                <td>@recipe.Sodium</td>
+                                                <td>@recipe.Rating</td>
+                                            </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <form id="addSelectedRecipeToMenu" class="form-signin" action="../Login/AddSelectedRecipeToMenu" method="POST">
+                                    <button class="btn btn-lg btn-primary btn-block" id="addSelectedRecipeToMenu" type="submit">Add Selected Recipe To Menu!</button>
+                                </form>
+                            </div>
+                        </div>
+
+        <p>@Html.ActionLink("Done - back to menus", "BackToMenus")</p>
+                    </div>
+                    <style>
+                        tr {
+                            background-color: #ffffff;
+                        }
+
+                            tr:hover {
+                                background-color: #f5f5f5;
+                            }
+                    </style>
+
+                    <script>
+                        function highlight_rowMenuRecipes() {
+                            var table = document.getElementById('recipe-onMenu-table');
+                            var cells = table.getElementsByTagName('td');
+                            for (var i = 0; i < cells.length; i++) {
+                                // Take each cell
+                                var cell = cells[i];
+                                // do something on onclick event for cell
+                                cell.onclick = function () {
+                                    // Get the row id where the cell exists
+                                    var rowId = this.parentNode.rowIndex;
+
+                                    var rowsNotSelected = table.getElementsByTagName('tr');
+                                    for (var row = 0; row < rowsNotSelected.length; row++) {
+                                        rowsNotSelected[row].style.backgroundColor = "";
+                                    }
+                                    var rowSelected = table.getElementsByTagName('tr')[rowId];
+                                    var recipeIDSelected = rowSelected.cells[0].id;
+                                    rowSelected.style.backgroundColor = "#F5F5F5";
+
+                                    msg = 'The menu ID is: ' + recipeIDSelected;
+                                    //msg = 'The menu ID is: ' + rowSelected.cells[0].innerHTML;
+                                    //alert(msg);
+                                    $.ajax({
+                                        type: "POST",
+                                        url: '/MenuEdit/RecipeDeleteSelectionChanged/' + recipeIDSelected,
+                                        success: successFunc,
+                                        error: errorFunc
+                                    });
+                                    // Need to force a reresh of the page since ajax ignores an ActionResult return.
+                                    function successFunc() {
+                                        window.location.href = '/MenuEdit/Index/';
+                                    }
+
+                                    function errorFunc() {
+                                        //alert('error');
+                                    }
+
+                                }
+                            }
+
+
+
+                        } //end of function
+
+                        function highlight_rowSearchRecipe() {
+                            var table = document.getElementById('recipe-onMenu-table');
+                            var cells = table.getElementsByTagName('td');
+                            for (var i = 0; i < cells.length; i++) {
+                                // Take each cell
+                                var cell = cells[i];
+                                // do something on onclick event for cell
+                                cell.onclick = function () {
+                                    // Get the row id where the cell exists
+                                    var rowId = this.parentNode.rowIndex;
+
+                                    var rowsNotSelected = table.getElementsByTagName('tr');
+                                    for (var row = 0; row < rowsNotSelected.length; row++) {
+                                        rowsNotSelected[row].style.backgroundColor = "";
+                                    }
+                                    var rowSelected = table.getElementsByTagName('tr')[rowId];
+                                    var recipeIDSelected = rowSelected.cells[0].id;
+                                    rowSelected.style.backgroundColor = "#F5F5F5";
+
+                                    msg = 'The menu ID is: ' + recipeIDSelected;
+                                    //msg = 'The menu ID is: ' + rowSelected.cells[0].innerHTML;
+                                    //alert(msg);
+                                    $.ajax({
+                                        type: "POST",
+                                        url: '/MenuEdit/RecipeAddSelectionChanged/' + recipeIDSelected,
+                                        success: successFunc,
+                                        error: errorFunc
+                                    });
+                                    // Need to force a reresh of the page since ajax ignores an ActionResult return.
+                                    function successFunc() {
+                                        window.location.href = '/MenuEdit/Index/';
+                                    }
+
+                                    function errorFunc() {
+                                        //alert('error');
+                                    }
+
+                                }
+                            }
+
+
+
+                        } //end of function
+
+                        window.onload = highlight_row;
+
+                    </script>
+
+</body>
+    </html>

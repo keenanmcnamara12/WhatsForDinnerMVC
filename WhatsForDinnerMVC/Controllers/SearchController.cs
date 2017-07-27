@@ -19,14 +19,7 @@ namespace WhatsForDinnerMVC.Controllers
             {
                 return RedirectToAction("index", "Login");
             }
-
-            string name = user.Name;
-            ViewBag.Message = "Hello " + name;
-
-            SearchTester searchTester = new SearchTester();
-            searchTester.PopulateAllUsers();
-            Session["searchTester"] = searchTester;
-            return View(searchTester);
+            return View(user);
         }
 
         [HttpPost]
@@ -44,15 +37,23 @@ namespace WhatsForDinnerMVC.Controllers
         public ActionResult NewMenuName(FormCollection collection)
         {
             string newMenuName = collection["newMenuName"];
+            //TODO need to create a new menu record.
+            return RedirectToAction("index", "MenuEdit");
+        }
 
-            SearchTester searchTester = (SearchTester)Session["searchTester"];
-            if (searchTester == null)
-            {
-                searchTester = new SearchTester();
-            }
+        [HttpPost]
+        public ActionResult EditRecipe()
+        {
+            return RedirectToAction("index","MenuEdit");
+        }
 
-            
-            return View("Index", searchTester);
+        [HttpPost]
+        public JsonResult SelectionChanged(int id)
+        {
+            User user = (User)this.Session["user"];
+            user.UpdateSelectedMenu(id);
+            Session["user"] = user;
+            return null;
         }
 
     }

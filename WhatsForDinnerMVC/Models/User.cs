@@ -44,6 +44,12 @@ namespace WhatsForDinnerMVC.Models
 		/// Indicates if this instance has a valid UserID/Password combination.
 		/// </summary>
 		public bool IsValid { get; private set; }
+
+        /// <summary>
+        /// The menu ID of the currently selected menu for displaying the recipes 
+        /// </summary>
+        public Menu SelectedMenu{ private set; get; }
+
 		#endregion
 
 		#region Constructors
@@ -61,8 +67,6 @@ namespace WhatsForDinnerMVC.Models
 
 			using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["DefaultConnection"].ToString()))
 			{
-
-
 				using (SqlCommand sqlCommand = new SqlCommand()) //MySqlCommand("SELECT COUNT(*) FROM User WHERE UserID like @user AND Password like @password;", conn))
 				{
 					sqlCommand.CommandText = "spIsValidUser";
@@ -72,77 +76,50 @@ namespace WhatsForDinnerMVC.Models
 					sqlCommand.Connection = conn;
 
 					conn.Open();
-
 					SqlDataReader reader = sqlCommand.ExecuteReader(CommandBehavior.CloseConnection);
-
 					if (reader.HasRows)
 					{
-
 						while (reader.Read())
 						{
-
 							int userCount;
-
 							Int32.TryParse(reader["ValidUser"].ToString(), out userCount);
-
 							if (userCount > 0)
 							{
 								IsValid = true; //TODO need to check if valid
 							}
-
 						}
-
 					}
-
-
-
-
-
 				}
 
-
 				// Let's also load the user's name and menu ID while we're here rather than adding handling to the property to check for an "is null"
-
 			}
 
 			using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["DefaultConnection"].ToString()))
 			{
-
 				using (SqlCommand sqlCommand = new SqlCommand()) //MySqlCommand("SELECT Name FROM User WHERE UserID like @user;", conn))
 				{
-
 					sqlCommand.CommandText = "spGetUserDisplayName";
 					sqlCommand.Parameters.AddWithValue("@userId", UserID);
 					sqlCommand.CommandType = CommandType.StoredProcedure;
 					sqlCommand.Connection = conn;
 					conn.Open();
 
-
 					SqlDataReader reader = sqlCommand.ExecuteReader(CommandBehavior.CloseConnection);
 
 					if (reader.HasRows)
 					{
-
 						while (reader.Read())
 						{
-
 							this.Name = reader["name"].ToString();
-
 						}
-
 					}
-
-
-
 				}
-
 			}
 
 			using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["DefaultConnection"].ToString()))
 			{
 				using (SqlCommand sqlCommand = new SqlCommand())
 				{
-
 					sqlCommand.CommandText = "spGetMenusForUser";
 					sqlCommand.Parameters.AddWithValue("@userId", UserID);
 					sqlCommand.CommandType = CommandType.StoredProcedure;
@@ -154,33 +131,36 @@ namespace WhatsForDinnerMVC.Models
 
 					if (reader.HasRows)
 					{
-
 						while (reader.Read())
 						{
-
 							int menuID;
 							if (Int32.TryParse(reader["menuId"].ToString(), out menuID))
 							{
-								Menus.Add(new Menu(menuID));
+
+                                bool duplicate = false;
+                                // First make sure user doesn't already have this menu in the list.
+                                foreach(Menu menu in Menus)
+                                {
+                                    
+                                    if (menu.MenuID == menuID)
+                                    {
+                                        duplicate = true;
+                                        break;
+                                    }
+                                }
+                                if (duplicate == false)
+                                {
+								    Menus.Add(new Menu(menuID));
+                                }
 							}
-
-
-
-
 						}
-
 					}
-
-
-
 				}
 			}
-
+            // Default the first menu as the selected menu to avoid null references
+            SelectedMenu = Menus[0];
 
 		}
-
-
-
 
 		/// <summary>
 		/// Constructor for the login page (don't actually need the user's name).
@@ -197,13 +177,11 @@ namespace WhatsForDinnerMVC.Models
 		#region Methods
 		public bool CreateNewUser()
 		{
-
 			// Check if the user exists in the database already.
 			using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["DefaultConnection"].ToString()))
 			{
 				using (SqlCommand sqlCommand = new SqlCommand())
 				{
-
 					sqlCommand.CommandText = "spIsUserIdUnique";
 					sqlCommand.Parameters.AddWithValue("@userId", UserID);
 					sqlCommand.CommandType = CommandType.StoredProcedure;
@@ -215,21 +193,15 @@ namespace WhatsForDinnerMVC.Models
 
 					if (reader.HasRows)
 					{
-
 						while (reader.Read())
 						{
-
 							int userCount;
-
 							Int32.TryParse(reader["userCount"].ToString(), out userCount);
-
 							if (userCount > 0)
 							{
 								return false;
 							}
-
 						}
-
 					}
 				}
 			}
@@ -248,20 +220,36 @@ namespace WhatsForDinnerMVC.Models
 					conn.Open();
 
 					sqlCommand.ExecuteNonQuery();
-
 					sqlCommand.Connection.Close();
 
 					return true;
-
-
-
 				}
-
-
 			}
-
 		}
-		#endregion
-	}
+
+        public void AddNewMenu(string MenuName)
+        {
+            // Get the next ID in the database 
+            //Menu menu = new Menu()
+        }
+
+        /// <summary>
+        /// Update the selected menu ID.
+        /// </summary>
+        /// <param name="menuID">The newly selected menu ID</param>
+        public void UpdateSelectedMenu(int menuID)
+        {
+            foreach(Menu menu in Menus)
+            {
+                if(menu.MenuID == menuID)
+                {
+                    SelectedMenu = menu;
+                    return;
+                }
+            }
+        }
+
+        #endregion
+    }
 }
 

@@ -35,6 +35,7 @@ namespace WhatsForDinnerMVC.Controllers
         [HttpPost]
         public ActionResult BackToMenus()
         {
+            int test = 0;
             return RedirectToAction("index", "Search");
         }
 

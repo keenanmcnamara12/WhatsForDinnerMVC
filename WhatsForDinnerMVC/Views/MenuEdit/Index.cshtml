@@ -1,6 +1,6 @@
 ﻿@model WhatsForDinnerMVC.Models.Menu
 @{
-    ViewBag.Title = "Search";
+    ViewBag.Title = "Menu Edit";
     Layout = null;
 }
 
@@ -12,7 +12,7 @@
     <meta name="viewport" content="width=device-width" />
     <link href="@Url.Content("~/Content/bootstrap.css")" rel="stylesheet" type="text/css" />
     <link href="@Url.Content("~/Content/Site.css")" rel="stylesheet" type="text/css" />
-    <title>What's For Dinner Search</title>
+    <title>What's For Dinner Menu Edit</title>
 </head>
 <body>
     <div>
@@ -49,18 +49,21 @@
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        @foreach (WhatsForDinnerMVC.Models.Recipe recipe in Model.Recipes)
-                                        {
-                                        <tr>
-                                            <td id="@recipe.ID">@recipe.Title</td>
-                                            <td>@recipe.Description</td>
-                                            <td>@recipe.Calories;</td>
-                                            <td>@recipe.Fat</td>
-                                            <td>@recipe.Protein</td>
-                                            <td>@recipe.Sodium</td>
-                                            <td>@recipe.Rating</td>
-                                        </tr>
-                                        }
+                                            @if (Model.Recipes.Count > 0)
+                                            {
+                                                foreach (WhatsForDinnerMVC.Models.Recipe recipe in Model.Recipes)
+                                                {
+                                                <tr>
+                                                    <td id="@recipe.ID">@recipe.Title</td>
+                                                    <td>@recipe.Description</td>
+                                                    <td>@recipe.Calories;</td>
+                                                    <td>@recipe.Fat</td>
+                                                    <td>@recipe.Protein</td>
+                                                    <td>@recipe.Sodium</td>
+                                                    <td>@recipe.Rating</td>
+                                                </tr>
+                                                }
+                                            }
                                     </tbody>
                                 </table>
                             </div>
@@ -105,17 +108,20 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            @foreach (WhatsForDinnerMVC.Models.Recipe recipe in Model.SearchRecipeResults)
+                                            @if (Model.Recipes.Count > 0)
                                             {
-                                            <tr>
-                                                <td id="@recipe.ID">@recipe.Title</td>
-                                                <td>@recipe.Description</td>
-                                                <td>@recipe.Calories;</td>
-                                                <td>@recipe.Fat</td>
-                                                <td>@recipe.Protein</td>
-                                                <td>@recipe.Sodium</td>
-                                                <td>@recipe.Rating</td>
-                                            </tr>
+                                                foreach (WhatsForDinnerMVC.Models.Recipe recipe in Model.SearchRecipeResults)
+                                                {
+                                                <tr>
+                                                    <td id="@recipe.ID">@recipe.Title</td>
+                                                    <td>@recipe.Description</td>
+                                                    <td>@recipe.Calories;</td>
+                                                    <td>@recipe.Fat</td>
+                                                    <td>@recipe.Protein</td>
+                                                    <td>@recipe.Sodium</td>
+                                                    <td>@recipe.Rating</td>
+                                                </tr>
+                                                }
                                             }
                                         </tbody>
                                     </table>

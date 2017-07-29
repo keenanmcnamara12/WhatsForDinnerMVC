@@ -29,8 +29,9 @@ namespace WhatsForDinnerMVC.Models
             {
                 using (SqlCommand cmd = new SqlCommand())
                 {
-                    cmd.CommandText = "SELECT title, calories, description, fat, protein, rating, sodium FROM Recipes WHERE recipeId = @recipeId";
-                    //cmd.CommandType = CommandType.StoredProcedure;
+                    //cmd.CommandText = "SELECT title, calories, description, fat, protein, rating, sodium FROM Recipes WHERE recipeId = @recipeId";
+                    cmd.CommandText = "spGetRecipeInfo";
+                    cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Connection = connection;
                     cmd.Parameters.AddWithValue("@recipeId", ID);
                     connection.Open();

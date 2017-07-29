@@ -23,7 +23,7 @@ namespace WhatsForDinnerMVC.Controllers
 			{
 				ViewBag.Message = "";
 				this.Session["User"] = user;  // Save the user object so the search page can recover later.
-				return RedirectToAction("index", "Search");
+				return RedirectToAction("index", "MenuList");
 			}
 
 			// Not valid login - reload the login page and display viewmessage. 

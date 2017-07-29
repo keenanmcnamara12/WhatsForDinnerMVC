@@ -8,7 +8,7 @@ using WhatsForDinnerMVC.Models;
 
 namespace WhatsForDinnerMVC.Controllers
 {
-    public class SearchController : Controller
+    public class MenuListController : Controller
     {
         // GET: Search
         public ActionResult Index()
@@ -23,21 +23,21 @@ namespace WhatsForDinnerMVC.Controllers
         }
 
         [HttpPost]
-        public ActionResult SearchSubmitAction(FormCollection collection)
-        {
-            string searchString = collection["searchString"];
-
-            SearchTester searchTester = new SearchTester();
-            searchTester.PerformSearch(searchString);
-            Session["searchTester"] = searchTester;
-            return View("Index", searchTester);
-        }
-
-        [HttpPost]
         public ActionResult NewMenuName(FormCollection collection)
         {
             string newMenuName = collection["newMenuName"];
-            //TODO need to create a new menu record.
+            // Make sure the user create a manu name!
+            if (String.IsNullOrWhiteSpace(newMenuName))
+            {
+                return RedirectToAction("index", "Search");
+            }
+
+            // create a new menu record and make it the selected menu
+            User user = (User)Session["user"];
+            int newMenuId = user.AddNewMenu(newMenuName);
+            user.UpdateSelectedMenu(newMenuId);
+            Session["user"] = user;
+
             return RedirectToAction("index", "MenuEdit");
         }
 

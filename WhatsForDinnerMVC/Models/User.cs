@@ -158,8 +158,10 @@ namespace WhatsForDinnerMVC.Models
 				}
 			}
             // Default the first menu as the selected menu to avoid null references
-            SelectedMenu = Menus[0];
-
+            if (Menus.Count > 0)
+            {
+                SelectedMenu = Menus[0];
+            }   
 		}
 
 		/// <summary>
@@ -227,10 +229,17 @@ namespace WhatsForDinnerMVC.Models
 			}
 		}
 
-        public void AddNewMenu(string MenuName)
+        /// <summary>
+        /// Creates a new menu record and returns the ID of the new menu
+        /// </summary>
+        /// <param name="MenuName">Name of the menu that the user entered.</param>
+        /// <returns></returns>
+        public int AddNewMenu(string MenuName)
         {
-            // Get the next ID in the database 
-            //Menu menu = new Menu()
+            // Call the constructor that creates a new menu in the DB.
+            Menu newMenu = new Menu(MenuName, UserID);
+            Menus.Add(newMenu);
+            return newMenu.MenuID;
         }
 
         /// <summary>

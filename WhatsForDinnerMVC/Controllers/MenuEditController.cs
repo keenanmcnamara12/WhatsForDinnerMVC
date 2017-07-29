@@ -29,14 +29,16 @@ namespace WhatsForDinnerMVC.Controllers
             Menu menu = user.SelectedMenu;
             menu.PerformSearch(searchString);
             Session["user"] = user;
-            return View(user.SelectedMenu);
+            return View("index", user.SelectedMenu);
         }
 
-        [HttpPost]
+        /// <summary>
+        /// When the user wants to get out of the menu edit screen.
+        /// </summary>
+        /// <returns></returns>
         public ActionResult BackToMenus()
         {
-            int test = 0;
-            return RedirectToAction("index", "Search");
+            return RedirectToAction("index", "MenuList");
         }
 
         [HttpPost]

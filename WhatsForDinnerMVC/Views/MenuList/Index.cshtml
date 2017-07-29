@@ -1,6 +1,6 @@
 ﻿@model WhatsForDinnerMVC.Models.User
 @{
-    ViewBag.Title = "Search";
+    ViewBag.Title = "Menu List";
     Layout = null;
 }
 
@@ -14,7 +14,7 @@
     <link href="@Url.Content("~/Content/Site.css")" rel="stylesheet" type="text/css" />
     <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
-    <title>What's For Dinner Search</title>
+    <title>What's For Dinner Menu List</title>
 </head>
 <body>
     <div>
@@ -38,19 +38,22 @@
                         <thead>
                             <tr>
                                 <th>Menu Name</th>
-                                <th>When Created</th>
+                                @*<th>When Created</th>*@
                                 <th># Recipes</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                @foreach (WhatsForDinnerMVC.Models.Menu menu in Model.Menus)
+                                @if (Model.Menus.Count > 0)
                                 {
+                                    foreach (WhatsForDinnerMVC.Models.Menu menu in Model.Menus)
+                                    {
                                     <tr>
                                         <td id="@menu.MenuID">@menu.MenuName</td>
-                                        <td>@menu.WhenCreated.ToString()</td>
+                                        @*<td>@menu.WhenCreated.ToString()</td>*@
                                         <td>@menu.Recipes.Count;</td>
                                     </tr>
+                                    }
                                 }
                             </tbody>
                         </table>
@@ -59,7 +62,7 @@
                 <div class="view">
                     <nav class="navbar navbar-default" role="navigation">
                         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                            <form class="navbar-form navbar-left" action="../NewMenuName" method="POST" role="search">
+                            <form class="navbar-form navbar-left" action="@Url.Action("NewMenuName", "MenuList")" method="POST">
                                 <div class="form-group">
                                     <input type="text" name="newMenuName" class="form-control" placeholder="Add a new Menu">
                                 </div>
@@ -91,8 +94,10 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    @foreach (WhatsForDinnerMVC.Models.Recipe recipe in Model.SelectedMenu.Recipes)
+                                    @if (Model.SelectedMenu != null)
                                     {
+                                        foreach (WhatsForDinnerMVC.Models.Recipe recipe in Model.SelectedMenu.Recipes)
+                                        {
                                         <tr>
                                             <td>@recipe.Title</td>
                                             <td>@recipe.Description</td>
@@ -102,13 +107,17 @@
                                             <td>@recipe.Sodium</td>
                                             <td>@recipe.Rating</td>
                                         </tr>
+                                        }
                                     }
                                 </tbody>
                             </table>
                         </div>
-                    <form id="editRecipeForm" class="form-signin" action="../EditRecipe" method="POST">
-                        <button class="btn btn-lg btn-primary btn-block" id="editRecipeBtn" type="submit">Edit Recipes on Menu</button>
-                    </form>
+                    @if (Model.SelectedMenu != null)
+                    {
+                        <form id="editRecipeForm" class="form-signin" action="../MenuList/EditRecipe" method="POST">
+                            <button class="btn btn-lg btn-primary btn-block" id="editRecipeBtn" type="submit">Edit Recipes on Menu</button>
+                        </form>
+                    }
         </div>
    </div>
 
@@ -148,13 +157,13 @@
                     //alert(msg);
                     $.ajax({
                         type: "POST",
-                        url: '/Search/SelectionChanged/' + menuIDSelected,
+                        url: '/MenuList/SelectionChanged/' + menuIDSelected,
                         success: successFunc,
                         error: errorFunc
                     });
                     // Need to force a reresh of the page since ajax ignores an ActionResult return.
                     function successFunc() {
-                        window.location.href='/Search/Index/' ;
+                        window.location.href='/MenuList/Index/' ;
                     }
 
                     function errorFunc() {

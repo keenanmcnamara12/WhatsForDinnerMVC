@@ -14,18 +14,61 @@ namespace WhatsForDinnerMVC.Models
 	{
         public int MenuID { get; set; }
         public string MenuName { get; set; }
-        public DateTime WhenCreated { get; set; }
+        //public DateTime WhenCreated { get; set; }
         public List<Recipe> Recipes { get; set; }
         public Recipe SelectedDeleteRecipe { get; private set; }
         public Recipe SelectedAddRecipe { get; private set; }
         public List<Recipe> SearchRecipeResults { get; private set; }
 
         #region constructor(s)
+        /// <summary>
+        /// Given a name, create a menu in the database.  
+        /// </summary>
+        /// <param name="MenuName">Name of the new menu</param>
+        public Menu(string MenuName, string UserName) 
+        {
+            if (String.IsNullOrWhiteSpace(MenuName))
+            {
+                return;
+            }
+
+            using (SqlConnection connection = new SqlConnection(WebConfigurationManager.ConnectionStrings["DefaultConnection"].ToString()))
+            {
+                using (SqlCommand cmd = new SqlCommand())
+                {
+                    cmd.CommandText = "spCreateMenu";
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Connection = connection;
+                    cmd.Parameters.AddWithValue("@displayName", MenuName);
+                    cmd.Parameters.AddWithValue("@userId", UserName);
+                    connection.Open();
+
+                    SqlDataReader reader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            int newMenuId;
+                            if (Int32.TryParse(reader["menuId"].ToString(), out newMenuId))
+                            {
+                                this.MenuID = newMenuId;
+                                this.MenuName = MenuName;
+                                Recipes = new List<Recipe>();
+                                //WhenCreated = new DateTime();
+                                SearchRecipeResults = new List<Recipe>();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         public Menu(int MenuID)
 		{
 			this.MenuID = MenuID;
 			Recipes = new List<Recipe>();
-            WhenCreated = new DateTime();
+            //WhenCreated = new DateTime();
             SearchRecipeResults = new List<Recipe>();
 
             // Get info about the menuitself
@@ -33,8 +76,9 @@ namespace WhatsForDinnerMVC.Models
             {
                 using (SqlCommand cmd = new SqlCommand())
                 {
-                    cmd.CommandText = "SELECT displayName,timeOfLastUpdate FROM Menus WHERE menuId = @menuId";
-                    //cmd.CommandType = CommandType.StoredProcedure;
+                    //cmd.CommandText = "SELECT displayName FROM Menus WHERE menuId = @menuId";
+                    cmd.CommandText = "spGetMenuInfo";
+                    cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Connection = connection;
                     cmd.Parameters.AddWithValue("@menuId", MenuID);
                     connection.Open();
@@ -46,7 +90,6 @@ namespace WhatsForDinnerMVC.Models
                         while (reader.Read())
                         {
                             MenuName = (string)reader[0];
-                            WhenCreated = reader[1] as DateTime? ?? default(DateTime);
                         }
                     }
                 }
@@ -59,7 +102,7 @@ namespace WhatsForDinnerMVC.Models
 					cmd.CommandText = "spGetRecipesFromMenu";
 					cmd.CommandType = CommandType.StoredProcedure;
 					cmd.Connection = connection;
-					cmd.Parameters.AddWithValue("@menuId", MenuID);
+					cmd.Parameters.AddWithValue("@menuId", MenuID); 
 					connection.Open();
 
                     SqlDataReader reader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
@@ -78,7 +121,10 @@ namespace WhatsForDinnerMVC.Models
 				}
 			}
             // Default the first recipe as the selected recipe to avoid null references
-            SelectedDeleteRecipe = Recipes[0];
+            if (Recipes.Count > 0)
+            {
+                SelectedDeleteRecipe = Recipes[0];
+            }
         }
         #endregion
 
@@ -124,21 +170,25 @@ namespace WhatsForDinnerMVC.Models
             SearchRecipeResults.Clear();
             using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["DefaultConnection"].ToString()))
             {
-                using (SqlCommand sqlCommand = new SqlCommand())
+                using (SqlCommand cmd = new SqlCommand())
                 {
-                    sqlCommand.CommandText = "SELECT recipeId FROM Recipes WHERE title like @searchString";
-                    sqlCommand.Parameters.AddWithValue("@searchString", "%" + searchString + "%");
-                    sqlCommand.Connection = conn;
+                    //sqlCommand.CommandText = "SELECT recipeId FROM Recipes WHERE title like @searchString";
+                    cmd.CommandText = "spSearchDatabase";
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@searchTerms", searchString);
+                    cmd.Connection = conn;
 
                     conn.Open();
-                    SqlDataReader reader = sqlCommand.ExecuteReader(CommandBehavior.CloseConnection);
+                    SqlDataReader reader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
                     if (reader.HasRows)
                     {
                         while (reader.Read())
                         {
-                            int id = (int)reader[0];
-                            Recipe recipe = new Recipe((int)reader[0]);
-                            SearchRecipeResults.Add(recipe);
+                            int recipeId;
+                            if (Int32.TryParse(reader["recipeId"].ToString(), out recipeId))
+                            {
+                                SearchRecipeResults.Add(new Recipe(recipeId));
+                            }                            
                         }
                     }
                 }

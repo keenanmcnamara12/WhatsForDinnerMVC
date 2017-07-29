@@ -210,7 +210,7 @@
 
                                     msg = 'The menu ID is: ' + recipeIDSelected;
                                     //msg = 'The menu ID is: ' + rowSelected.cells[0].innerHTML;
-                                    alert(msg);
+                                    //alert(msg);
                                     $.ajax({
                                         type: "POST",
                                         url: '/MenuEdit/RecipeAddSelectionChanged/' + recipeIDSelected,
@@ -233,7 +233,8 @@
 
                         } //end of function
 
-                        window.onload = highlight_row;
+                        window.onload = highlight_rowMenuRecipes;
+                        window.onload = highlight_rowSearchRecipe;
 
                     </script>
 

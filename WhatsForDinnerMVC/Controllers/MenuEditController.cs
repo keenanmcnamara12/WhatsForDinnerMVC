@@ -18,6 +18,13 @@ namespace WhatsForDinnerMVC.Controllers
             {
                 return RedirectToAction("index", "Login");
             }
+            // Return the view from the session if it's there.
+            Menu selectedMenu = (Menu)Session["selectedMenu"];
+            if (selectedMenu != null)
+            {
+                return View(selectedMenu);
+            }
+            // If there wasn't a view in the session, return the selected view.
             return View(user.SelectedMenu);
         }
 
@@ -29,7 +36,8 @@ namespace WhatsForDinnerMVC.Controllers
             Menu menu = user.SelectedMenu;
             menu.PerformSearch(searchString);
             Session["user"] = user;
-            return View("index", user.SelectedMenu);
+            Session["selectedMenu"] = user.SelectedMenu;
+            return View("Index", user.SelectedMenu);
         }
 
         /// <summary>
@@ -38,7 +46,7 @@ namespace WhatsForDinnerMVC.Controllers
         /// <returns></returns>
         public ActionResult BackToMenus()
         {
-            return RedirectToAction("index", "MenuList");
+            return RedirectToAction("Index", "MenuList");
         }
 
         [HttpPost]
@@ -62,5 +70,16 @@ namespace WhatsForDinnerMVC.Controllers
             Session["user"] = user;
             return null;
         }
+
+        [HttpPost]
+        public ActionResult AddSelectedRecipeToMenu()
+        {
+            User user = (User)Session["user"];
+            Menu selectedMenu = user.SelectedMenu;
+            selectedMenu.Recipes.Add(selectedMenu.SelectedAddRecipe);
+            Session["user"] = user;
+            return View("Index", user.SelectedMenu);
+        }
+        
     }
 }

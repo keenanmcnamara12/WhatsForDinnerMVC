@@ -10,6 +10,7 @@ using System.Data;
 namespace WhatsForDinnerMVC.Models
 {
 	[System.Web.Script.Services.ScriptService]
+    [Serializable]
 	public class Menu
 	{
         public int MenuID { get; set; }

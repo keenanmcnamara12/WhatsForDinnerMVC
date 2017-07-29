@@ -19,7 +19,7 @@ namespace WhatsForDinnerMVC.Controllers
             {
                 return RedirectToAction("index", "Login");
             }
-            return View(user);
+            return View("index",user);
         }
 
         [HttpPost]

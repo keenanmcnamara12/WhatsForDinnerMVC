@@ -62,7 +62,7 @@
                 <div class="view">
                     <nav class="navbar navbar-default" role="navigation">
                         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                            <form class="navbar-form navbar-left" action="@Url.Action("NewMenuName", "MenuList")" method="POST">
+                            <form class="navbar-form navbar-left" action="@Url.Action("NewMenuName")" method="POST">
                                 <div class="form-group">
                                     <input type="text" name="newMenuName" class="form-control" placeholder="Add a new Menu">
                                 </div>
@@ -114,7 +114,7 @@
                         </div>
                     @if (Model.SelectedMenu != null)
                     {
-                        <form id="editRecipeForm" class="form-signin" action="../MenuList/EditRecipe" method="POST">
+                        <form id="editRecipeForm" class="form-signin" action="@Url.Action("EditRecipe")" method="POST">
                             <button class="btn btn-lg btn-primary btn-block" id="editRecipeBtn" type="submit">Edit Recipes on Menu</button>
                         </form>
                     }

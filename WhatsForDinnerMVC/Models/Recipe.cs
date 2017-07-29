@@ -8,6 +8,7 @@ using System.Data;
 
 namespace WhatsForDinnerMVC.Models
 {
+    [Serializable]
     public class Recipe
     {
         public int ID { get; set; }

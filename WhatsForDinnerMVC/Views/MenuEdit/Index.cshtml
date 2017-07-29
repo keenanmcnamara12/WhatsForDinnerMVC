@@ -67,7 +67,7 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <form id="addSelectedRecipeToMenu" class="form-signin" action="../Login/AddSelectedRecipeToMenu" method="POST">
+                            <form id="addSelectedRecipeToMenu" class="form-signin" action="@Url.Action("AddSelectedRecipeToMenu")" method="POST">
                                 <button class="btn btn-lg btn-primary btn-block" id="addSelectedRecipeToMenu" type="submit">Delete Selected Recipe From Menu?</button>
                             </form>
                         </div>
@@ -81,7 +81,7 @@
                                     <div class="view">
                                         <nav class="navbar navbar-default" role="navigation">
                                             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                                                <form class="navbar-form navbar-left" action="../MenuEdit/PerformSearch" method="POST" role="search">
+                                                <form class="navbar-form navbar-left" action="@Url.Action("PerformSearch")" method="POST" role="search">
                                                     <div class="form-group">
                                                         <input type="text" name="SearchString" class="form-control" placeholder="Search">
                                                     </div>
@@ -108,7 +108,7 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            @if (Model.Recipes.Count > 0)
+                                            @if (Model.SearchRecipeResults.Count > 0)
                                             {
                                                 foreach (WhatsForDinnerMVC.Models.Recipe recipe in Model.SearchRecipeResults)
                                                 {
@@ -126,7 +126,7 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                <form id="addSelectedRecipeToMenu" class="form-signin" action="../Login/AddSelectedRecipeToMenu" method="POST">
+                                <form id="addSelectedRecipeToMenu" class="form-signin" action="@Url.Action("AddSelectedRecipeToMenu")" method="POST">
                                     <button class="btn btn-lg btn-primary btn-block" id="addSelectedRecipeToMenu" type="submit">Add Selected Recipe To Menu!</button>
                                 </form>
                             </div>
@@ -190,7 +190,7 @@
                         } //end of function
 
                         function highlight_rowSearchRecipe() {
-                            var table = document.getElementById('recipe-onMenu-table');
+                            var table = document.getElementById('recipe-inSearch-table');
                             var cells = table.getElementsByTagName('td');
                             for (var i = 0; i < cells.length; i++) {
                                 // Take each cell
@@ -210,7 +210,7 @@
 
                                     msg = 'The menu ID is: ' + recipeIDSelected;
                                     //msg = 'The menu ID is: ' + rowSelected.cells[0].innerHTML;
-                                    //alert(msg);
+                                    alert(msg);
                                     $.ajax({
                                         type: "POST",
                                         url: '/MenuEdit/RecipeAddSelectionChanged/' + recipeIDSelected,

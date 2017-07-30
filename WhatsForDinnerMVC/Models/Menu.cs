@@ -10,91 +10,91 @@ using System.Data;
 namespace WhatsForDinnerMVC.Models
 {
 	[System.Web.Script.Services.ScriptService]
-    [Serializable]
+	[Serializable]
 	public class Menu
 	{
-        public int MenuID { get; set; }
-        public string MenuName { get; set; }
-        //public DateTime WhenCreated { get; set; }
-        public List<Recipe> Recipes { get; set; }
-        public Recipe SelectedDeleteRecipe { get; private set; }
-        public Recipe SelectedAddRecipe { get; private set; }
-        public List<Recipe> SearchRecipeResults { get; private set; }
+		public int MenuID { get; set; }
+		public string MenuName { get; set; }
+		//public DateTime WhenCreated { get; set; }
+		public List<Recipe> Recipes { get; set; }
+		public Recipe SelectedDeleteRecipe { get; private set; }
+		public Recipe SelectedAddRecipe { get; private set; }
+		public List<Recipe> SearchRecipeResults { get; private set; }
 
-        #region constructor(s)
-        /// <summary>
-        /// Given a name, create a menu in the database.  
-        /// </summary>
-        /// <param name="MenuName">Name of the new menu</param>
-        public Menu(string MenuName, string UserName) 
-        {
-            if (String.IsNullOrWhiteSpace(MenuName))
-            {
-                return;
-            }
+		#region constructor(s)
+		/// <summary>
+		/// Given a name, create a menu in the database.  
+		/// </summary>
+		/// <param name="MenuName">Name of the new menu</param>
+		public Menu(string MenuName, string UserName)
+		{
+			if (String.IsNullOrWhiteSpace(MenuName))
+			{
+				return;
+			}
 
-            using (SqlConnection connection = new SqlConnection(WebConfigurationManager.ConnectionStrings["DefaultConnection"].ToString()))
-            {
-                using (SqlCommand cmd = new SqlCommand())
-                {
-                    cmd.CommandText = "spCreateMenu";
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Connection = connection;
-                    cmd.Parameters.AddWithValue("@displayName", MenuName);
-                    cmd.Parameters.AddWithValue("@userId", UserName);
-                    connection.Open();
+			using (SqlConnection connection = new SqlConnection(WebConfigurationManager.ConnectionStrings["DefaultConnection"].ToString()))
+			{
+				using (SqlCommand cmd = new SqlCommand())
+				{
+					cmd.CommandText = "spCreateMenu";
+					cmd.CommandType = CommandType.StoredProcedure;
+					cmd.Connection = connection;
+					cmd.Parameters.AddWithValue("@displayName", MenuName);
+					cmd.Parameters.AddWithValue("@userId", UserName);
+					connection.Open();
 
-                    SqlDataReader reader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+					SqlDataReader reader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
 
-                    if (reader.HasRows)
-                    {
-                        while (reader.Read())
-                        {
-                            int newMenuId;
-                            if (Int32.TryParse(reader["menuId"].ToString(), out newMenuId))
-                            {
-                                this.MenuID = newMenuId;
-                                this.MenuName = MenuName;
-                                Recipes = new List<Recipe>();
-                                //WhenCreated = new DateTime();
-                                SearchRecipeResults = new List<Recipe>();
-                            }
-                        }
-                    }
-                }
-            }
-        }
+					if (reader.HasRows)
+					{
+						while (reader.Read())
+						{
+							int newMenuId;
+							if (Int32.TryParse(reader["menuId"].ToString(), out newMenuId))
+							{
+								this.MenuID = newMenuId;
+								this.MenuName = MenuName;
+								Recipes = new List<Recipe>();
+								//WhenCreated = new DateTime();
+								SearchRecipeResults = new List<Recipe>();
+							}
+						}
+					}
+				}
+			}
+		}
 
-        public Menu(int MenuID)
+		public Menu(int MenuID)
 		{
 			this.MenuID = MenuID;
 			Recipes = new List<Recipe>();
-            //WhenCreated = new DateTime();
-            SearchRecipeResults = new List<Recipe>();
+			//WhenCreated = new DateTime();
+			SearchRecipeResults = new List<Recipe>();
 
-            // Get info about the menuitself
-            using (SqlConnection connection = new SqlConnection(WebConfigurationManager.ConnectionStrings["DefaultConnection"].ToString()))
-            {
-                using (SqlCommand cmd = new SqlCommand())
-                {
-                    //cmd.CommandText = "SELECT displayName FROM Menus WHERE menuId = @menuId";
-                    cmd.CommandText = "spGetMenuInfo";
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Connection = connection;
-                    cmd.Parameters.AddWithValue("@menuId", MenuID);
-                    connection.Open();
+			// Get info about the menuitself
+			using (SqlConnection connection = new SqlConnection(WebConfigurationManager.ConnectionStrings["DefaultConnection"].ToString()))
+			{
+				using (SqlCommand cmd = new SqlCommand())
+				{
+					//cmd.CommandText = "SELECT displayName FROM Menus WHERE menuId = @menuId";
+					cmd.CommandText = "spGetMenuInfo";
+					cmd.CommandType = CommandType.StoredProcedure;
+					cmd.Connection = connection;
+					cmd.Parameters.AddWithValue("@menuId", MenuID);
+					connection.Open();
 
-                    SqlDataReader reader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+					SqlDataReader reader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
 
-                    if (reader.HasRows)
-                    {
-                        while (reader.Read())
-                        {
-                            MenuName = (string)reader[0];
-                        }
-                    }
-                }
-            }
+					if (reader.HasRows)
+					{
+						while (reader.Read())
+						{
+							MenuName = (string)reader[0];
+						}
+					}
+				}
+			}
 
 			using (SqlConnection connection = new SqlConnection(WebConfigurationManager.ConnectionStrings["DefaultConnection"].ToString()))
 			{
@@ -103,10 +103,10 @@ namespace WhatsForDinnerMVC.Models
 					cmd.CommandText = "spGetRecipesFromMenu";
 					cmd.CommandType = CommandType.StoredProcedure;
 					cmd.Connection = connection;
-					cmd.Parameters.AddWithValue("@menuId", MenuID); 
+					cmd.Parameters.AddWithValue("@menuId", MenuID);
 					connection.Open();
 
-                    SqlDataReader reader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+					SqlDataReader reader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
 
 					if (reader.HasRows)
 					{
@@ -121,31 +121,46 @@ namespace WhatsForDinnerMVC.Models
 					}
 				}
 			}
-            // Default the first recipe as the selected recipe to avoid null references
-            if (Recipes.Count > 0)
-            {
-                SelectedDeleteRecipe = Recipes[0];
-            }
-        }
-        #endregion
+			// Default the first recipe as the selected recipe to avoid null references
+			if (Recipes.Count > 0)
+			{
+				SelectedDeleteRecipe = Recipes[0];
+			}
+		}
+		#endregion
 
-        #region methods
-        /// <summary>
-        /// Update the selected Recipe so on the menu (so deletetion can leverage).
-        /// </summary>
-        /// <param name="id"></param>
-        public void UpdateDeleteSelectedRecipe(int id)
-        {
-            foreach(Recipe recipe in Recipes)
-            {
-                if (recipe.ID == id)
-                {
-                    SelectedDeleteRecipe = recipe;
-                    return;
-                }
-            }
-        }
+		#region methods
+		/// <summary>
+		/// Update the selected Recipe so on the menu (so deletetion can leverage).
+		/// </summary>
+		/// <param name="id"></param>
+		public void UpdateDeleteSelectedRecipe(int id)
+		{
+			foreach (Recipe recipe in Recipes)
+			{
+				if (recipe.ID == id)
+				{
+					SelectedDeleteRecipe = recipe;
+					return;
+				}
+			}
+		}
 
+		/// <summary>
+		/// Update the selected Recipe so on the menu (so add can leverage).
+		/// </summary>
+		/// <param name="id"></param>
+		public void UpdateAddSelectedRecipe(int id)
+		{
+			foreach (Recipe recipe in Recipes)
+			{
+				if (recipe.ID == id)
+				{
+					SelectedAddRecipe = recipe;
+					return;
+				}
+			}
+		}
         /// <summary>
         /// Update the selected Recipe so on the menu (so add can leverage).
         /// </summary>
@@ -162,22 +177,22 @@ namespace WhatsForDinnerMVC.Models
             }
         }
 
-        /// <summary>
-        /// Perform a search and load the list of recipes to the search
-        /// </summary>
-        public void PerformSearch(string searchString)
-        {
-            // First clear past search results
-            SearchRecipeResults.Clear();
-            using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["DefaultConnection"].ToString()))
-            {
-                using (SqlCommand cmd = new SqlCommand())
-                {
-                    //sqlCommand.CommandText = "SELECT recipeId FROM Recipes WHERE title like @searchString";
-                    cmd.CommandText = "spSearchDatabase";
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@searchTerms", searchString);
-                    cmd.Connection = conn;
+		/// <summary>
+		/// Perform a search and load the list of recipes to the search
+		/// </summary>
+		public void PerformSearch(string searchString)
+		{
+			// First clear past search results
+			SearchRecipeResults.Clear();
+			using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["DefaultConnection"].ToString()))
+			{
+				using (SqlCommand cmd = new SqlCommand())
+				{
+					//sqlCommand.CommandText = "SELECT recipeId FROM Recipes WHERE title like @searchString";
+					cmd.CommandText = "spSearchDatabase";
+					cmd.CommandType = CommandType.StoredProcedure;
+					cmd.Parameters.AddWithValue("@searchTerms", searchString);
+					cmd.Connection = conn;
 
                     conn.Open();
                     SqlDataReader reader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
@@ -266,6 +281,6 @@ namespace WhatsForDinnerMVC.Models
             }
         }
 
-        #endregion
-    }
+		#endregion
+	}
 }

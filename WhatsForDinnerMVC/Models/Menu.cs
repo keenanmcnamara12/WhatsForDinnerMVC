@@ -161,6 +161,21 @@ namespace WhatsForDinnerMVC.Models
 				}
 			}
 		}
+        /// <summary>
+        /// Update the selected Recipe so on the menu (so add can leverage).
+        /// </summary>
+        /// <param name="id">ID of the recipe to make as the selected recipe.</param>
+        public void UpdateAddSelectedRecipe(int id)
+        {
+            foreach (Recipe recipe in SearchRecipeResults)
+            {
+                if (recipe.ID == id)
+                {
+                    SelectedAddRecipe = recipe;
+                    return;
+                }
+            }
+        }
 
 		/// <summary>
 		/// Perform a search and load the list of recipes to the search
@@ -179,22 +194,92 @@ namespace WhatsForDinnerMVC.Models
 					cmd.Parameters.AddWithValue("@searchTerms", searchString);
 					cmd.Connection = conn;
 
-					conn.Open();
-					SqlDataReader reader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
-					if (reader.HasRows)
-					{
-						while (reader.Read())
-						{
-							int recipeId;
-							if (Int32.TryParse(reader["recipeId"].ToString(), out recipeId))
-							{
-								SearchRecipeResults.Add(new Recipe(recipeId));
-							}
-						}
-					}
-				}
-			}
-		}
+                    conn.Open();
+                    SqlDataReader reader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            int recipeId;
+                            if (Int32.TryParse(reader["recipeId"].ToString(), out recipeId))
+                            {
+                                SearchRecipeResults.Add(new Recipe(recipeId));
+                            }                            
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// If there is a selected recipe to add, it will be added to the database
+        /// and the local Recipe list.
+        /// </summary>
+        public void AddSelectedRecipeToMenu()
+        {
+            // In case a menu hasn't been selected, don't attempt to add it to the list.
+            if (SelectedAddRecipe != null)
+            {
+                // Ensure not a duplicate (or you'll get a primary key duplicate error in SQL and throw exception)
+                foreach (Recipe recipe in Recipes)
+                {
+                    if (recipe.ID == SelectedAddRecipe.ID)
+                    {
+                        return;
+                    }
+                }
+                
+                // Update local object
+                Recipes.Add(SelectedAddRecipe);
+
+                // Update DB
+                using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["DefaultConnection"].ToString()))
+                {
+                    using (SqlCommand cmd = new SqlCommand())
+                    {
+                        cmd.CommandText = "spInsertRecipeIntoMenu";
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@recipeId", SelectedAddRecipe.ID);
+                        cmd.Parameters.AddWithValue("@menuId", MenuID);
+                        cmd.Connection = conn;
+
+                        conn.Open();
+                        cmd.ExecuteNonQuery();
+                        cmd.Connection.Close();
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// If there is a selected recipe to delete, it will be deleted from the database
+        /// and the local Recipe list.
+        /// </summary>
+        public void DeleteSelectedRecipeFromMenu()
+        {
+            // In case a menu hasn't been selected, don't attempt to add it to the list.
+            if (SelectedDeleteRecipe != null)
+            {
+                // Update local object
+                Recipes.Remove(SelectedDeleteRecipe);
+
+                // Update DB
+                using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["DefaultConnection"].ToString()))
+                {
+                    using (SqlCommand cmd = new SqlCommand())
+                    {
+                        cmd.CommandText = "spRemoveRecipeFromMenu";
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@recipeId", SelectedDeleteRecipe.ID);
+                        cmd.Parameters.AddWithValue("@menuId", MenuID);
+                        cmd.Connection = conn;
+
+                        conn.Open();
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+        }
 
 		#endregion
 	}

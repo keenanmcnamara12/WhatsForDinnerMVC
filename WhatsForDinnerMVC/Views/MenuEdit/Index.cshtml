@@ -12,6 +12,8 @@
     <meta name="viewport" content="width=device-width" />
     <link href="@Url.Content("~/Content/bootstrap.css")" rel="stylesheet" type="text/css" />
     <link href="@Url.Content("~/Content/Site.css")" rel="stylesheet" type="text/css" />
+    <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
     <title>What's For Dinner Menu Edit</title>
     <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
@@ -69,8 +71,8 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <form id="addSelectedRecipeToMenu" class="form-signin" action="@Url.Action("AddSelectedRecipeToMenu")" method="POST">
-                                <button class="btn btn-lg btn-primary btn-block" id="addSelectedRecipeToMenu" type="submit">Delete Selected Recipe From Menu?</button>
+                            <form id="DeleteSelectedRecipeFromMenu" class="form-signin" action="@Url.Action("DeleteSelectedRecipeFromMenu")" method="POST">
+                                <button class="btn btn-lg btn-primary btn-block" id="DeleteSelectedRecipeFromMenu" type="submit">Delete Selected Recipe From Menu?</button>
                             </form>
                         </div>
 
@@ -157,7 +159,7 @@
                             $('#modalBody').show();
                         }
 
-                        function highlight_rowMenuRecipes() {
+                        function rowDeleteRecipeSelectionChanged() {
                             var table = document.getElementById('recipe-onMenu-table');
                             var cells = table.getElementsByTagName('td');
                             for (var i = 0; i < cells.length; i++) {
@@ -193,60 +195,56 @@
                                     function errorFunc() {
                                         //alert('error');
                                     }
-
                                 }
                             }
-
-
-
                         } //end of function
 
-                        function highlight_rowSearchRecipe() {
-                            var table = document.getElementById('recipe-inSearch-table');
-                            var cells = table.getElementsByTagName('td');
-                            for (var i = 0; i < cells.length; i++) {
-                                // Take each cell
-                                var cell = cells[i];
-                                // do something on onclick event for cell
-                                cell.onclick = function () {
-                                    // Get the row id where the cell exists
-                                    var rowId = this.parentNode.rowIndex;
+                            function rowSearchRecipeSelectionChanged() {
+                                var table = document.getElementById('recipe-inSearch-table');
+                                var cells = table.getElementsByTagName('td');
+                                for (var i = 0; i < cells.length; i++) {
+                                    // Take each cell
+                                    var cell = cells[i];
+                                    // do something on onclick event for cell
+                                    cell.onclick = function () {
+                                        // Get the row id where the cell exists
+                                        var rowId = this.parentNode.rowIndex;
 
-                                    var rowsNotSelected = table.getElementsByTagName('tr');
-                                    for (var row = 0; row < rowsNotSelected.length; row++) {
-                                        rowsNotSelected[row].style.backgroundColor = "";
+                                        var rowsNotSelected = table.getElementsByTagName('tr');
+                                        for (var row = 0; row < rowsNotSelected.length; row++) {
+                                            rowsNotSelected[row].style.backgroundColor = "";
+                                        }
+                                        var rowSelected = table.getElementsByTagName('tr')[rowId];
+                                        var recipeIDSelected = rowSelected.cells[0].id;
+                                        rowSelected.style.backgroundColor = "#F5F5F5";
+
+                                        msg = 'The menu ID is: ' + recipeIDSelected;
+                                        //msg = 'The menu ID is: ' + rowSelected.cells[0].innerHTML;
+                                        //alert(msg);
+                                        $.ajax({
+                                            type: "POST",
+                                            url: '/MenuEdit/RecipeAddSelectionChanged/' + recipeIDSelected,
+                                            success: successFunc,
+                                            error: errorFunc
+                                        });
+                                        // Need to force a reresh of the page since ajax ignores an ActionResult return.
+                                        function successFunc() {
+                                            window.location.href = '/MenuEdit/Index/';
+                                        }
+
+                                        function errorFunc() {
+                                            //alert('error');
+                                        }
                                     }
-                                    var rowSelected = table.getElementsByTagName('tr')[rowId];
-                                    var recipeIDSelected = rowSelected.cells[0].id;
-                                    rowSelected.style.backgroundColor = "#F5F5F5";
-
-                                    msg = 'The menu ID is: ' + recipeIDSelected;
-                                    //msg = 'The menu ID is: ' + rowSelected.cells[0].innerHTML;
-                                    //alert(msg);
-                                    $.ajax({
-                                        type: "POST",
-                                        url: '/MenuEdit/RecipeAddSelectionChanged/' + recipeIDSelected,
-                                        success: successFunc,
-                                        error: errorFunc
-                                    });
-                                    // Need to force a reresh of the page since ajax ignores an ActionResult return.
-                                    function successFunc() {
-                                        window.location.href = '/MenuEdit/Index/';
-                                    }
-
-                                    function errorFunc() {
-                                        //alert('error');
-                                    }
-
                                 }
+                            } //end of function
+
+                            function combineSelectionChangedFile() {
+                                rowDeleteRecipeSelectionChanged();
+                                rowSearchRecipeSelectionChanged();
                             }
 
-
-
-                        } //end of function
-
-                        window.onload = highlight_rowMenuRecipes;
-                        window.onload = highlight_rowSearchRecipe;
+                            window.onload = combineSelectionChangedFile;
 
                     </script>
     <div id="recipeModal" class="modal fade" tabindex="-1" role="dialog">

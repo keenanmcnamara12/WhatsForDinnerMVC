@@ -9,7 +9,10 @@ using System.Data;
 namespace WhatsForDinnerMVC.Models
 {
 
-	//This is scott's comment that we don't want overriding keenan's comment
+
+	/// <summary>
+	/// This class holds the details about ingredients for a recipe.
+	/// </summary>
 
 	public class Ingredient
 	{

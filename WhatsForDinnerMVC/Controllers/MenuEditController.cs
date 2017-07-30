@@ -33,6 +33,14 @@ namespace WhatsForDinnerMVC.Controllers
         {
             string searchString = collection["searchString"];
             User user = (User)this.Session["user"];
+            if (user == null || !user.IsValid)
+            {
+                return RedirectToAction("index", "Login");
+            }
+            if (string.IsNullOrWhiteSpace(searchString))
+            {
+                return View("Index", user.SelectedMenu);
+            }
             Menu menu = user.SelectedMenu;
             menu.PerformSearch(searchString);
             Session["user"] = user;
@@ -75,6 +83,10 @@ namespace WhatsForDinnerMVC.Controllers
         public ActionResult AddSelectedRecipeToMenu()
         {
             User user = (User)Session["user"];
+            if (user == null || !user.IsValid)
+            {
+                return RedirectToAction("index", "Login");
+            }
             user.SelectedMenu.AddSelectedRecipeToMenu();
             Session["user"] = user;
             return View("Index", user.SelectedMenu);
@@ -84,10 +96,70 @@ namespace WhatsForDinnerMVC.Controllers
         public ActionResult DeleteSelectedRecipeFromMenu()
         {
             User user = (User)Session["user"];
+            if (user == null || !user.IsValid)
+            {
+                return RedirectToAction("index", "Login");
+            }
             user.SelectedMenu.DeleteSelectedRecipeFromMenu();
             Session["user"] = user;
             return View("Index", user.SelectedMenu);
         }
+
+        [HttpPost]
+        public ActionResult GetModalAddRecipe(int id)
+        {
+            User user = (User)Session["user"];
+            if (user == null || !user.IsValid)
+            {
+                return RedirectToAction("index", "Login");
+            }
+            // To prevent the user from needing to select the row then the button, we update the selected menu based on the
+            // row that the clicked button was in.
+            Menu selectedMenu = user.SelectedMenu;
+            selectedMenu.UpdateAddSelectedRecipe(id);
+            return PartialView("Modal", user.SelectedMenu.SelectedAddRecipe);
+        }
+
+        [HttpPost]
+        public ActionResult GetModalDeleteRecipe(int id)
+        {
+            User user = (User)Session["user"];
+            if (user == null || !user.IsValid)
+            {
+                return RedirectToAction("index", "Login");
+            }
+            // To prevent the user from needing to select the row then the button, we update the selected menu based on the
+            // row that the clicked button was in.
+            Menu selectedMenu = user.SelectedMenu;
+            selectedMenu.UpdateDeleteSelectedRecipe(id);
+            return PartialView("Modal", user.SelectedMenu.SelectedDeleteRecipe);
+        }
+
+        //[HttpPost]
+        //public ActionResult Launch_RecipeModal()
+        //{
+        //    User user = (User)Session["user"];
+        //    if (user == null || !user.IsValid)
+        //    {
+        //        return RedirectToAction("index", "Login");
+        //    }
+        //    user.SelectedMenu.ShowModel = true;
+        //    Session["user"] = user;
+        //    return View("Index", user.SelectedMenu);
+        //}
+
+        //[HttpPost]
+        //public ActionResult Close_RecipeModal()
+        //{
+        //    User user = (User)Session["user"];
+        //    if (user == null || !user.IsValid)
+        //    {
+        //        return RedirectToAction("index", "Login");
+        //    }
+        //    user.SelectedMenu.ShowModel = false;
+        //    Session["user"] = user;
+        //    return View("Index", user.SelectedMenu);
+        //}
 
     }
 }

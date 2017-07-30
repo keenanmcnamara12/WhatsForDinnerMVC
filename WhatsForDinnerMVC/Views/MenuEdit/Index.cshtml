@@ -17,6 +17,7 @@
     <title>What's For Dinner Menu Edit</title>
     <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 <body class="menu-edit">
     <div class="container">
@@ -31,7 +32,7 @@
         }
     </div>
 
-    <div class="container" style="max-width: 80%">
+    <div class="container" style="max-width: 90%">
 
 
 
@@ -52,6 +53,7 @@
                                         <th>Protein</th>
                                         <th>Sodium</th>
                                         <th>Rating</th>
+                                        <th>Addt Details</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -68,6 +70,9 @@
                                                     <td>@recipe.Protein</td>
                                                     <td>@recipe.Sodium</td>
                                                     <td>@recipe.Rating</td>
+                                                    <td>
+                                                        <input id="viewRecipe" class="detailsDeleteButton" type="button" value="View Recipe" />
+                                                    </td>
                                                 </tr>
                                                 }
                                             }
@@ -111,6 +116,7 @@
                                             <th>Protein</th>
                                             <th>Sodium</th>
                                             <th>Rating</th>
+                                            <th>Addt Details</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -128,7 +134,7 @@
                                                     <td>@recipe.Sodium</td>
                                                     <td>@recipe.Rating</td>
                                                     <td>
-                                                        <input id="viewRecipe" type="button" value="View Recipe" onclick="launch_recipeModal();" />
+                                                        <input id="viewRecipe" class="detailsAddButton" type="button" value="View Recipe" />
                                                     </td>
                                                 </tr>
                                                 }
@@ -144,6 +150,10 @@
 
         <p>@Html.ActionLink("Done - back to menus", "BackToMenus")</p>
                     </div>
+
+   
+    <div id="modalHolderDiv"></div> <!--Dummy div to be filled with partial view modal content :)-->
+   
                     <style>
                         tr {
                             background-color: #ffffff;
@@ -156,12 +166,7 @@
 
                     <script>
 
-                        function launch_recipeModal()
-                        {
-                            $('#recipeModal').show();
-                            $('#modalBody').show();
-                        }
-
+                        // Register the on click selection changing for the delete/review existing list
                         function rowDeleteRecipeSelectionChanged() {
                             var table = document.getElementById('recipe-onMenu-table');
                             var cells = table.getElementsByTagName('td');
@@ -190,9 +195,9 @@
                                         success: successFunc,
                                         error: errorFunc
                                     });
-                                    // Need to force a reresh of the page since ajax ignores an ActionResult return.
+                                    // Need to force a reresh of the page since ajax ignores an ActionResult return. - actually don't want to do this since it jumps the page location to the top and seems uneeded.
                                     function successFunc() {
-                                        window.location.href = '/MenuEdit/Index/';
+                                        //window.location.href = '/MenuEdit/Index/';
                                     }
 
                                     function errorFunc() {
@@ -202,6 +207,7 @@
                             }
                         } //end of function
 
+                            // Register the on click selection changing for the add/search list
                             function rowSearchRecipeSelectionChanged() {
                                 var table = document.getElementById('recipe-inSearch-table');
                                 var cells = table.getElementsByTagName('td');
@@ -230,9 +236,9 @@
                                             success: successFunc,
                                             error: errorFunc
                                         });
-                                        // Need to force a reresh of the page since ajax ignores an ActionResult return.
+                                        // Need to force a reresh of the page since ajax ignores an ActionResult return. - actually don't want to do this since it jumps the page location to the top and seems uneeded.
                                         function successFunc() {
-                                            window.location.href = '/MenuEdit/Index/';
+                                            //window.location.href = '/MenuEdit/Index/';
                                         }
 
                                         function errorFunc() {
@@ -241,43 +247,76 @@
                                     }
                                 }
                             } //end of function
+                            
+                            // Register the modal filling action to the View Details on the add menu
+                            function showAddRecipeDetailsModal() {
+
+                                $(".detailsAddButton").click(function () {
+                                    var table = document.getElementById('recipe-inSearch-table');
+                                    var rowId = this.parentNode.parentNode.rowIndex;
+                                    var rowSelected = table.getElementsByTagName('tr')[rowId];
+                                    var recipeIDSelected = rowSelected.cells[0].id;
+                                    rowSelected.style.backgroundColor = "#F5F5F5";
+                                    msg = 'The recipe ID is: ' + recipeIDSelected;
+                                    //alert(msg);
+
+                                    $.ajax(
+                                        {
+                                            type: 'POST',
+                                            url: '/MenuEdit/GetModalAddRecipe/' + recipeIDSelected,
+                                            success: function (result) {
+                                                $("#modalHolderDiv").html(result);
+                                                $("#myModal").modal("show"); // make sure to dispaly the modal now that we have the HMTL that contains the modal.
+                                            },
+
+                                            error: function (error) {
+                                                alert('Fail');
+                                            }
+                                        });
+                                });
+                            }
+
+                            // Register the modal filling action to the View Details button on the detele menu
+                            function showDeleteRecipeDetailsModal() {
+
+                                $(".detailsDeleteButton").click(function () {
+                                    var table = document.getElementById('recipe-onMenu-table');
+                                    var rowId = this.parentNode.parentNode.rowIndex;
+                                    var rowSelected = table.getElementsByTagName('tr')[rowId];
+                                    var recipeIDSelected = rowSelected.cells[0].id;
+                                    rowSelected.style.backgroundColor = "#F5F5F5";
+                                    msg = 'The recipe ID is: ' + recipeIDSelected;
+                                    //alert(msg);
+
+                                    $.ajax(
+                                        {
+                                            type: 'POST',
+                                            url: '/MenuEdit/GetModalDeleteRecipe/' + recipeIDSelected,
+                                            success: function (result) {
+                                                $("#modalHolderDiv").html(result);
+                                                $("#myModal").modal("show"); // make sure to dispaly the modal now that we have the HMTL that contains the modal.
+                                            },
+
+                                            error: function (error) {
+                                                alert('Fail');
+                                            }
+                                        });
+                                });
+                            }
 
                             function combineSelectionChangedFile() {
                                 rowDeleteRecipeSelectionChanged();
                                 rowSearchRecipeSelectionChanged();
+                                showAddRecipeDetailsModal();
+                                showDeleteRecipeDetailsModal();
                             }
-
+                            // Register all the on click functions when the page loads.
                             window.onload = combineSelectionChangedFile;
 
                     </script>
-    <div id="recipeModal" class="modal fade" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button id="modalCloseX" type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 id="modalTitleId" class="modal-title">Modal Title</h4>
-                </div>
-                <div class="modal-header">
-                    
-                </div>
-                <div id="modalLoading" class="modal-body">
-                </div>
-                <div id="modalBody" class="modal-body">
-                    <h2>Recipe Title</h2>
-                    <h3>Description</h3>
-                    <text>Content</text>
-                    <h3>Ingredients</h3>
-                    <text>Content</text>
-                    <h3>Preparation</h3>
-                    <text>Content</text>
-                    
-                </div>
-                <div class="modal-footer">
-                    <button type="button" id="modalClose" class="btn btn-default" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
+
+
+
 
 </body>
     </html>

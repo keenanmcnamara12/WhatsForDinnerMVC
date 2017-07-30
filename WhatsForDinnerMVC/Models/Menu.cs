@@ -20,6 +20,7 @@ namespace WhatsForDinnerMVC.Models
 		public Recipe SelectedDeleteRecipe { get; private set; }
 		public Recipe SelectedAddRecipe { get; private set; }
 		public List<Recipe> SearchRecipeResults { get; private set; }
+        public bool ShowModel { get; set; }
 
 		#region constructor(s)
 		/// <summary>
@@ -58,6 +59,8 @@ namespace WhatsForDinnerMVC.Models
 								Recipes = new List<Recipe>();
 								//WhenCreated = new DateTime();
 								SearchRecipeResults = new List<Recipe>();
+                                SelectedAddRecipe = new Recipe();
+                                ShowModel = false;
 							}
 						}
 					}
@@ -71,6 +74,8 @@ namespace WhatsForDinnerMVC.Models
 			Recipes = new List<Recipe>();
 			//WhenCreated = new DateTime();
 			SearchRecipeResults = new List<Recipe>();
+            SelectedAddRecipe = new Recipe();
+            ShowModel = false;
 
 			// Get info about the menuitself
 			using (SqlConnection connection = new SqlConnection(WebConfigurationManager.ConnectionStrings["DefaultConnection"].ToString()))
@@ -152,7 +157,7 @@ namespace WhatsForDinnerMVC.Models
 		/// <param name="id"></param>
 		public void UpdateAddSelectedRecipe(int id)
 		{
-			foreach (Recipe recipe in Recipes)
+			foreach (Recipe recipe in SearchRecipeResults)
 			{
 				if (recipe.ID == id)
 				{
@@ -203,7 +208,7 @@ namespace WhatsForDinnerMVC.Models
 		public void AddSelectedRecipeToMenu()
 		{
 			// In case a menu hasn't been selected, don't attempt to add it to the list.
-			if (SelectedAddRecipe != null)
+			if (SelectedAddRecipe != null & SelectedAddRecipe.IsValid == true)
 			{
 				// Ensure not a duplicate (or you'll get a primary key duplicate error in SQL and throw exception)
 				foreach (Recipe recipe in Recipes)
@@ -243,7 +248,7 @@ namespace WhatsForDinnerMVC.Models
 		public void DeleteSelectedRecipeFromMenu()
 		{
 			// In case a menu hasn't been selected, don't attempt to add it to the list.
-			if (SelectedDeleteRecipe != null)
+			if (SelectedDeleteRecipe != null && SelectedAddRecipe.IsValid == true)
 			{
 				// Update local object
 				Recipes.Remove(SelectedDeleteRecipe);

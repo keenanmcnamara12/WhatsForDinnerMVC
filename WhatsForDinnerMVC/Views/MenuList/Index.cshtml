@@ -16,7 +16,7 @@
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
     <title>What's For Dinner Menu List</title>
 </head>
-<body id="menu-list">
+<body class="menu-list">
     <div class="container">
         <nav class="navbar-brand">What's For Dinner?</nav>
     </div>
@@ -38,7 +38,7 @@
                 <div class="table-container">
                     <div class="table-responsive">
                         <table class="table" id="menu-table">
-                            <thead>
+                            <thead class="menuEdit-row">
                                 <tr>
                                     <th>Menu Name</th>
 
@@ -51,7 +51,7 @@
                                 {
                                     foreach (WhatsForDinnerMVC.Models.Menu menu in Model.Menus)
                                     {
-                                        <tr>
+                                        <tr class="menuEdit-row">
                                             <td id="@menu.MenuID">@menu.MenuName</td>
 
                                             <td>@menu.Recipes.Count;</td>
@@ -62,7 +62,7 @@
                             </table>
                         </div>
                     </div>
-                <div class="view">
+                <div class="newMenu">
                     <nav class="navbar navbar-default" role="navigation">
                         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                             <form class="navbar-form navbar-left" action="@Url.Action("NewMenuName")" method="POST">
@@ -85,7 +85,7 @@
                     <div class="table-responsive">
                         <table class="table">
                             <thead>
-                                <tr>
+                                <tr class="menuEdit-row">
                                     <th>Name</th>
                                     <th>Description</th>
                                     <th>Calories</th>
@@ -96,12 +96,12 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
+                                <tr class="menuEdit-row">
                                     @if (Model.SelectedMenu != null)
                                     {
                                         foreach (WhatsForDinnerMVC.Models.Recipe recipe in Model.SelectedMenu.Recipes)
                                         {
-                                        <tr>
+                                        <tr class="menuEdit-row">
                                             <td>@recipe.Title</td>
                                             <td>@recipe.Description</td>
                                             <td>@recipe.Calories;</td>

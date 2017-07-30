@@ -12,6 +12,7 @@ namespace WhatsForDinnerMVC.Models
 
 	/// <summary>
 	/// This class holds the details about ingredients for a recipe.
+	/// This is a competing comment.
 	/// </summary>
 	public class Ingredient
 	{

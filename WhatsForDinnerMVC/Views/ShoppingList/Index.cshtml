@@ -5,44 +5,49 @@
     Layout = null; //TODO what is layout for?
 }
 
-<h2>Shopping List</h2>
 <head>
     <meta name="viewport" content="width=device-width" />
     <meta name="viewport" content="width=device-width" />
     <link href="@Url.Content("~/Content/bootstrap.css")" rel="stylesheet" type="text/css" />
     <link href="@Url.Content("~/Content/Site.css")" rel="stylesheet" type="text/css" />
     <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
-    <title>Shopping List</title>
+
     <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
 </head>
 
-@using (Html.BeginForm()) 
-{
-    @Html.AntiForgeryToken()
-    
-    <div class="form-horizontal">
-        <h4>ShoppingList</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <table>
-            
-            @foreach (string ingredient in Model)
-            {
-                <tr>
-                    <td>@ingredient</td>
-                </tr>
-}
-        </table>
-
+<body class="shopping-list" >
+    <div class="shoppingList-form">
+        <div class="container">
+            <nav class="navbar-brand">What's For Dinner?</nav>
+        </div>
     </div>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="shoppingList-form">
+            <h2 class="shoppingList-header">Shopping List</h2>
+            <table class="shoppingList-table">
+
+                @foreach (string ingredient in Model)
+                {
+                    <tr class="shoppingList-row">
+                        <td class="shoppingList-data">- @ingredient</td>
+                    </tr>
 }
+            </table>
+
+        </div>
+    }
 
 <div>
     @Html.ActionLink("Back to List", "Index", "MenuList")
 </div>
 
 @section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}
+        @Scripts.Render("~/bundles/jqueryval")
+    }
+
+</body>

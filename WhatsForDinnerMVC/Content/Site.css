@@ -15,24 +15,75 @@
 .dl-horizontal dt {
     white-space: normal;
 }
-
+.shoppingList-table, .shoppingList-header{
+    background-color: rgba(0, 0, 0, 0.4);
+    margin:auto;
+    display: block;
+    width: 40%;
+}
+h1, h2{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #ffffff;
+}
 /* Set width on the form input elements since they're 100% wide by default */
 input,
 select,
+.menu-edit, .shopping-list{
+    background-image: url(/Images/pexels-photo-349608.jpeg);
+    min-height: 100%;
+    min-width: 100%;
+}
 textarea {
     max-width: 280px;
 }
-
-body {
-  padding-top: 40px;
-  padding-bottom: 40px;
-  background-color: #eee;
+tr {
+    background-color: rgba(145,135,135, .9);
 }
 
+tr:hover {
+    background-color: #000000;
+}
+.shoppingList-row {
+    background-color: rgba(0,0,0,.4);
+}
+.table-container{
+    background-color: rgba(0,0,0,.4);
+}
+.shoppingList-data {
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: rgb(255,255,255);
+}
+#menu-list{
+    background-image: url(/Images/woodTable.jpeg);
+    min-height: 100%;
+    min-width: 100%;
+}
+#login-register {
+
+  background-image: url(/Images/cook-food-kitchen-eat-54455.jpeg);
+  min-width: 100%;
+  min-height: 100%;
+
+}
+.shoppingList-form {
+    margin:auto;
+    display: block;
+    width: 100%;
+
+}
+.navbar-brand{
+    color: #ffffff;
+    background-color: #000000;
+    min-width: 100%;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: large;
+}
 .form-signin {
   max-width: 330px;
   padding: 15px;
   margin: 0 auto;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #ffffff;
 }
 .form-signin .form-signin-heading,
 .form-signin .checkbox {
@@ -57,9 +108,11 @@ body {
   margin-bottom: -1px;
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
+  background-color: #ffffff;
 }
 .form-signin input[type="password"] {
   margin-bottom: 10px;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
+  background-color: #ffffff;
 }

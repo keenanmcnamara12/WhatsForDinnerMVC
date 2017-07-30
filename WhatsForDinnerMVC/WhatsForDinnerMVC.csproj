@@ -219,6 +219,9 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Images\cook-food-kitchen-eat-54455.jpeg" />
+    <Content Include="Images\pexels-photo-349608.jpeg" />
+    <Content Include="Images\woodTable.jpeg" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="App_Data\WhatsForDinner.mwb" />

@@ -13,24 +13,25 @@
     <title>What's For Dinner Login</title> <!--#Model.userName-->
 
 </head>
-<body>
+<body id="login-register">
+        <div class="container">
+            <nav class="navbar-brand">What's For Dinner?</nav>
+        </div>
+        <div class="container">
+            <form id="loginForm" class="form-signin" action="../Login/SubmitAction" method="POST">
+                <h2 class="form-signin-heading">Sign in</h2>
+                <input type="email" name="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+                <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required>
+                <button class="btn btn-lg btn-primary btn-block" id="loginBtn" type="submit">Sign in</button>
 
-    <div class="container">
-        <form id="loginForm" class="form-signin" action="../Login/SubmitAction" method="POST">
-            <h2 class="form-signin-heading">Sign in</h2>
-            <input type="email" name="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
-            <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required>
-            <button class="btn btn-lg btn-primary btn-block" id="loginBtn" type="submit">Sign in</button>
+                @if (ViewBag.Message != null)
+                {
+                    <p>@ViewBag.Message</p>}
 
-            @if (ViewBag.Message != null)
-            {
-                <p>@ViewBag.Message</p>
-            }
+                <p>@Html.ActionLink("Register as a new user", "Register")</p>
 
-            <p>@Html.ActionLink("Register as a new user", "Register")</p>
-
-        </form>
-    </div> <!-- /container -->
+            </form>
+        </div> <!-- /container -->
 
 </body>
 </html>

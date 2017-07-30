@@ -12,16 +12,15 @@ namespace WhatsForDinnerMVC.Models
 
 	/// <summary>
 	/// This class holds the details about ingredients for a recipe. 
-	/// Keenan did you see this comment?
 	/// </summary>
 
 	public class Ingredient
 	{
 
-		string quantity { get; set; }
-		string unit { get; set; }
-		string ingredientName { get; set; }
-		string preparation { get; set; }
+		public string quantity { get; set; }
+		public string unit { get; set; }
+		public string ingredientName { get; set; }
+		public string preparation { get; set; }
 
 
 		public Ingredient(string quantity, string unit, string ingredientName, string preparation)
@@ -34,10 +33,22 @@ namespace WhatsForDinnerMVC.Models
 
 		}
 
+		public Ingredient(string quantity, string unit, string IngredientName)
+		{
+			this.quantity = quantity;
+			this.unit = unit;
+			this.ingredientName = IngredientName;
+		}
 
 		public override string ToString()
 		{
-			return quantity + " " + unit + " " + ingredientName + " " + preparation;
+			if (!String.IsNullOrWhiteSpace(preparation))
+			{
+				return quantity + " " + unit + " " + ingredientName + " " + preparation;
+			}
+
+			return quantity + " " + unit + " " + ingredientName;
+
 		}
 	}
 }

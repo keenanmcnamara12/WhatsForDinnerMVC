@@ -20,7 +20,7 @@ namespace WhatsForDinnerMVC.Models
 		public Recipe SelectedDeleteRecipe { get; private set; }
 		public Recipe SelectedAddRecipe { get; private set; }
 		public List<Recipe> SearchRecipeResults { get; private set; }
-        public bool ShowModel { get; set; }
+		public bool ShowModel { get; set; }
 
 		#region constructor(s)
 		/// <summary>
@@ -59,8 +59,8 @@ namespace WhatsForDinnerMVC.Models
 								Recipes = new List<Recipe>();
 								//WhenCreated = new DateTime();
 								SearchRecipeResults = new List<Recipe>();
-                                SelectedAddRecipe = new Recipe();
-                                ShowModel = false;
+								SelectedAddRecipe = new Recipe();
+								ShowModel = false;
 							}
 						}
 					}
@@ -74,8 +74,8 @@ namespace WhatsForDinnerMVC.Models
 			Recipes = new List<Recipe>();
 			//WhenCreated = new DateTime();
 			SearchRecipeResults = new List<Recipe>();
-            SelectedAddRecipe = new Recipe();
-            ShowModel = false;
+			SelectedAddRecipe = new Recipe();
+			ShowModel = false;
 
 			// Get info about the menuitself
 			using (SqlConnection connection = new SqlConnection(WebConfigurationManager.ConnectionStrings["DefaultConnection"].ToString()))

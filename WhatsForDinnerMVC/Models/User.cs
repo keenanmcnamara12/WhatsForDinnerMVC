@@ -258,6 +258,33 @@ namespace WhatsForDinnerMVC.Models
 			}
 		}
 
+		/// <summary>
+		/// Delete the currently selected menu (if one is selected).
+		/// </summary>
+		public void DeleteSelectedMenu()
+		{
+			if (SelectedMenu != null)
+			{
+				// Update local object
+				Menus.Remove(SelectedMenu);
+
+				// Update DB
+				using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["DefaultConnection"].ToString()))
+				{
+					using (SqlCommand cmd = new SqlCommand())
+					{
+						cmd.CommandText = "spDeleteMenu";
+						cmd.CommandType = CommandType.StoredProcedure;
+						cmd.Parameters.AddWithValue("@menuId", SelectedMenu.MenuID);
+						cmd.Connection = conn;
+
+						conn.Open();
+						cmd.ExecuteNonQuery();
+					}
+				}
+                SelectedMenu = null; // need to remove or the recipes could display in the selected menu table.
+			}
+		}
 		#endregion
 	}
 }

@@ -28,6 +28,12 @@ namespace WhatsForDinnerMVC.Controllers
             return View(user.SelectedMenu);
         }
 
+        // Whenever I accidentally compile and load during modal editting... (and a user would be able to do the same).
+        public ActionResult Modal()
+        {
+            return RedirectToAction("Index");
+        }
+
         [HttpPost]
         public ActionResult PerformSearch(FormCollection collection)
         {

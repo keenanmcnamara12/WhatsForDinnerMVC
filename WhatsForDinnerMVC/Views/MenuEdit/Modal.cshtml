@@ -36,14 +36,23 @@
                                 -->
 
                                 <h3>Description</h3>
-                                <text>@Model.Description</text>
+                                <text>@(string.IsNullOrWhiteSpace(Model.Description) ? "-" : Model.Description)</text>
                                 <h3>Ingredients</h3>
                                 <text>
                                     @foreach (WhatsForDinnerMVC.Models.Ingredient ingredient in Model.IngredientsList)
                                     {
-                                        <h4>@ingredient.ingredientName</h4>
+                                        <ul>
+                                            <li>
+                                                <h4>@(string.IsNullOrWhiteSpace(ingredient.ingredientName) ? "-" : ingredient.ingredientName)</h4>
+                                                <ul>
+                                                    <li>Preparation: @(string.IsNullOrWhiteSpace(ingredient.preparation) ? "-" : ingredient.preparation)</li>
+                                                    <li>Quantity: @(string.IsNullOrWhiteSpace(ingredient.quantity) && string.IsNullOrWhiteSpace(ingredient.quantity) ? "-" : ingredient.quantity + " " + ingredient.unit)</li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                        @*<h4>@ingredient.ingredientName</h4>
                                         <p>Preparation: @ingredient.preparation</p>
-                                        <p>Quantity: @ingredient.quantity @ingredient.unit</p>
+                                        <p>Quantity: @ingredient.quantity @ingredient.unit</p>*@
                                     }
                                 </text>
 

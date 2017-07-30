@@ -34,7 +34,11 @@ namespace WhatsForDinnerMVC.Controllers
 
 			// create a new menu record and make it the selected menu
 			User user = (User)Session["user"];
-			int newMenuId = user.AddNewMenu(newMenuName);
+            if (user == null || !user.IsValid)
+            {
+                return RedirectToAction("index", "Login");
+            }
+            int newMenuId = user.AddNewMenu(newMenuName);
 			user.UpdateSelectedMenu(newMenuId);
 			Session["user"] = user;
 
@@ -58,7 +62,7 @@ namespace WhatsForDinnerMVC.Controllers
 		public JsonResult SelectionChanged(int id)
 		{
 			User user = (User)this.Session["user"];
-			user.UpdateSelectedMenu(id);
+            user.UpdateSelectedMenu(id);
 			Session["user"] = user;
 			return null;
 		}

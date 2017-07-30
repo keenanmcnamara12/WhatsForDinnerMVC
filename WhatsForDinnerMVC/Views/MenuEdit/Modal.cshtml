@@ -1,0 +1,60 @@
+﻿@model WhatsForDinnerMVC.Models.Recipe
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>AddProduct</title>
+</head>
+<body>
+    <div>
+        @if (Model.IsValid == true)
+        {
+            <div class="modal fade" id="myModal" role="dialog">
+                <div class="modal-dialog">
+
+                    <!-- Modal content-->
+
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title">@Model.Title</h4>
+                            </div>
+                            <div class="modal-body">
+                                <!--
+                                <h2>Recipe Title</h2>
+                                <h3>Description</h3>
+                                <text>Content</text>
+                                <h3>Ingredients</h3>
+                                <text>Content</text>
+                                <h3>Preparation</h3>
+                                <text>Content</text>
+                                -->
+
+                                <h3>Description</h3>
+                                <text>Model.SelectedAddRecipe.Description</text>
+                                <h3>Ingredients</h3>
+                                <text>
+                                    @foreach (WhatsForDinnerMVC.Models.Ingredient ingredient in Model.IngredientsList)
+                                    {
+                                        <h4>@ingredient.ingredientName</h4>
+                                        <p>Preparation: @ingredient.preparation</p>
+                                        <p>Quantity: @ingredient.quantity @ingredient.unit</p>
+                                    }
+                                </text>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        }
+    </div>
+</body>
+</html>

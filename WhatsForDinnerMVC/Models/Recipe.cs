@@ -19,15 +19,22 @@ namespace WhatsForDinnerMVC.Models
 		public Decimal Sodium { get; set; }
 		public Decimal Rating { get; set; }
 		public Decimal Protein { get; set; }
+		public bool IsValid { get; set; }
 
 		public List<string> DirectionsList { get; set; }
 
 		public List<Ingredient> IngredientsList { get; set; }
 
 		#region constructor
+		public Recipe()
+		{
+			IsValid = false;
+		}
+
 		public Recipe(int recipeID)
 		{
 			this.ID = recipeID;
+			IsValid = true;
 
 			// Get info about the menuitself
 			using (SqlConnection connection = new SqlConnection(WebConfigurationManager.ConnectionStrings["DefaultConnection"].ToString()))

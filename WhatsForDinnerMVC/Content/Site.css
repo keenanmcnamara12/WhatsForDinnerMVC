@@ -21,13 +21,16 @@
     display: block;
     width: 40%;
 }
+
 h1, h2{
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: #ffffff;
 }
 /* Set width on the form input elements since they're 100% wide by default */
 input,
-select,
+select{
+    color: #000000;
+}
 .menu-edit, .shopping-list{
     background-image: url(/Images/pexels-photo-349608.jpeg);
     min-height: 100%;
@@ -36,24 +39,21 @@ select,
 textarea {
     max-width: 280px;
 }
-tr {
-    background-color: rgba(145,135,135, .9);
+.menuEdit-row {
+    background-color: rgba(145,135,135, .7);
 }
 
 tr:hover {
-    background-color: #000000;
+    background-color: #ffffff;
 }
-.shoppingList-row {
-    background-color: rgba(0,0,0,.4);
-}
-.table-container{
+.table-container, .newMenu, .navbar, .navbar-default, .bs-example-navbar-collapse-1, .navbar-form, .form-group{
     background-color: rgba(0,0,0,.4);
 }
 .shoppingList-data {
     font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: rgb(255,255,255);
+    color: rgb(0,0,0);
 }
-#menu-list{
+.menu-list{
     background-image: url(/Images/woodTable.jpeg);
     min-height: 100%;
     min-width: 100%;
@@ -108,11 +108,11 @@ tr:hover {
   margin-bottom: -1px;
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
-  background-color: #ffffff;
+
 }
 .form-signin input[type="password"] {
   margin-bottom: 10px;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
-  background-color: #ffffff;
+
 }

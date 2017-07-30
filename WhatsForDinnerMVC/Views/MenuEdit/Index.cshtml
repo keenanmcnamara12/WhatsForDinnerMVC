@@ -13,6 +13,8 @@
     <link href="@Url.Content("~/Content/bootstrap.css")" rel="stylesheet" type="text/css" />
     <link href="@Url.Content("~/Content/Site.css")" rel="stylesheet" type="text/css" />
     <title>What's For Dinner Menu Edit</title>
+    <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
 </head>
 <body>
     <div>
@@ -120,6 +122,9 @@
                                                     <td>@recipe.Protein</td>
                                                     <td>@recipe.Sodium</td>
                                                     <td>@recipe.Rating</td>
+                                                    <td>
+                                                        <input id="viewRecipe" type="button" value="View Recipe" onclick="launch_recipeModal();" />
+                                                    </td>
                                                 </tr>
                                                 }
                                             }
@@ -145,6 +150,13 @@
                     </style>
 
                     <script>
+
+                        function launch_recipeModal()
+                        {
+                            $('#recipeModal').show();
+                            $('#modalBody').show();
+                        }
+
                         function highlight_rowMenuRecipes() {
                             var table = document.getElementById('recipe-onMenu-table');
                             var cells = table.getElementsByTagName('td');
@@ -237,6 +249,34 @@
                         window.onload = highlight_rowSearchRecipe;
 
                     </script>
+    <div id="recipeModal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button id="modalCloseX" type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 id="modalTitleId" class="modal-title">Modal Title</h4>
+                </div>
+                <div class="modal-header">
+                    
+                </div>
+                <div id="modalLoading" class="modal-body">
+                </div>
+                <div id="modalBody" class="modal-body">
+                    <h2>Recipe Title</h2>
+                    <h3>Description</h3>
+                    <text>Content</text>
+                    <h3>Ingredients</h3>
+                    <text>Content</text>
+                    <h3>Preparation</h3>
+                    <text>Content</text>
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="modalClose" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </body>
     </html>

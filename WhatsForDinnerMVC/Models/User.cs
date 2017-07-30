@@ -45,10 +45,10 @@ namespace WhatsForDinnerMVC.Models
 		/// </summary>
 		public bool IsValid { get; private set; }
 
-        /// <summary>
-        /// The menu ID of the currently selected menu for displaying the recipes 
-        /// </summary>
-        public Menu SelectedMenu{ private set; get; }
+		/// <summary>
+		/// The menu ID of the currently selected menu for displaying the recipes 
+		/// </summary>
+		public Menu SelectedMenu{ private set; get; }
 
 		#endregion
 
@@ -137,31 +137,31 @@ namespace WhatsForDinnerMVC.Models
 							if (Int32.TryParse(reader["menuId"].ToString(), out menuID))
 							{
 
-                                bool duplicate = false;
-                                // First make sure user doesn't already have this menu in the list.
-                                foreach(Menu menu in Menus)
-                                {
-                                    
-                                    if (menu.MenuID == menuID)
-                                    {
-                                        duplicate = true;
-                                        break;
-                                    }
-                                }
-                                if (duplicate == false)
-                                {
-								    Menus.Add(new Menu(menuID));
-                                }
+								bool duplicate = false;
+								// First make sure user doesn't already have this menu in the list.
+								foreach(Menu menu in Menus)
+								{
+									
+									if (menu.MenuID == menuID)
+									{
+										duplicate = true;
+										break;
+									}
+								}
+								if (duplicate == false)
+								{
+									Menus.Add(new Menu(menuID));
+								}
 							}
 						}
 					}
 				}
 			}
-            // Default the first menu as the selected menu to avoid null references
-            if (Menus.Count > 0)
-            {
-                SelectedMenu = Menus[0];
-            }   
+			// Default the first menu as the selected menu to avoid null references
+			if (Menus.Count > 0)
+			{
+				SelectedMenu = Menus[0];
+			}   
 		}
 
 		/// <summary>
@@ -169,7 +169,7 @@ namespace WhatsForDinnerMVC.Models
 		/// </summary>
 		/// <param name="UserID"></param>
 		/// <param name="Password"></param>
-		public User(string UserID, string Password) : this(UserID, "", Password, false)
+		public User(string UserID, string Password) : this(UserID, "", Password, true)
 		{ }
 
 		public User(string UserID, string Name, string Password) : this(UserID, Name, Password, false)
@@ -229,36 +229,36 @@ namespace WhatsForDinnerMVC.Models
 			}
 		}
 
-        /// <summary>
-        /// Creates a new menu record and returns the ID of the new menu
-        /// </summary>
-        /// <param name="MenuName">Name of the menu that the user entered.</param>
-        /// <returns></returns>
-        public int AddNewMenu(string MenuName)
-        {
-            // Call the constructor that creates a new menu in the DB.
-            Menu newMenu = new Menu(MenuName, UserID);
-            Menus.Add(newMenu);
-            return newMenu.MenuID;
-        }
+		/// <summary>
+		/// Creates a new menu record and returns the ID of the new menu
+		/// </summary>
+		/// <param name="MenuName">Name of the menu that the user entered.</param>
+		/// <returns></returns>
+		public int AddNewMenu(string MenuName)
+		{
+			// Call the constructor that creates a new menu in the DB.
+			Menu newMenu = new Menu(MenuName, UserID);
+			Menus.Add(newMenu);
+			return newMenu.MenuID;
+		}
 
-        /// <summary>
-        /// Update the selected menu ID.
-        /// </summary>
-        /// <param name="menuID">The newly selected menu ID</param>
-        public void UpdateSelectedMenu(int menuID)
-        {
-            foreach(Menu menu in Menus)
-            {
-                if(menu.MenuID == menuID)
-                {
-                    SelectedMenu = menu;
-                    return;
-                }
-            }
-        }
+		/// <summary>
+		/// Update the selected menu ID.
+		/// </summary>
+		/// <param name="menuID">The newly selected menu ID</param>
+		public void UpdateSelectedMenu(int menuID)
+		{
+			foreach(Menu menu in Menus)
+			{
+				if(menu.MenuID == menuID)
+				{
+					SelectedMenu = menu;
+					return;
+				}
+			}
+		}
 
-        #endregion
-    }
+		#endregion
+	}
 }
 

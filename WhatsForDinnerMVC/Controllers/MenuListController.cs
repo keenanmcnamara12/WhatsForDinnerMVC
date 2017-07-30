@@ -67,5 +67,12 @@ namespace WhatsForDinnerMVC.Controllers
 			return null;
 		}
 
-	}
+        public ActionResult LogOut()
+        {
+            Session["user"] = null;
+            return RedirectToAction("Index", "Login");
+        }
+
+
+    }
 }

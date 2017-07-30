@@ -75,11 +75,19 @@ namespace WhatsForDinnerMVC.Controllers
         public ActionResult AddSelectedRecipeToMenu()
         {
             User user = (User)Session["user"];
-            Menu selectedMenu = user.SelectedMenu;
-            selectedMenu.Recipes.Add(selectedMenu.SelectedAddRecipe);
+            user.SelectedMenu.AddSelectedRecipeToMenu();
             Session["user"] = user;
             return View("Index", user.SelectedMenu);
         }
-        
+
+        [HttpPost]
+        public ActionResult DeleteSelectedRecipeFromMenu()
+        {
+            User user = (User)Session["user"];
+            user.SelectedMenu.DeleteSelectedRecipeFromMenu();
+            Session["user"] = user;
+            return View("Index", user.SelectedMenu);
+        }
+
     }
 }

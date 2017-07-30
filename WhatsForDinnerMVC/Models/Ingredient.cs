@@ -9,7 +9,7 @@ using System.Data;
 namespace WhatsForDinnerMVC.Models
 {
 
-
+	//This is scott's comment that we don't want overriding keenan's comment
 
 	public class Ingredient
 	{

@@ -47,6 +47,13 @@ namespace WhatsForDinnerMVC.Controllers
 			return RedirectToAction("index", "MenuEdit");
 		}
 
+
+		[HttpPost]
+		public ActionResult ViewShoppingList()
+		{
+			return RedirectToAction("index", "ShoppingList");
+		}
+
 		[HttpPost]
 		public JsonResult SelectionChanged(int id)
 		{

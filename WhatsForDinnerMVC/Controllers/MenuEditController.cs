@@ -19,10 +19,10 @@ namespace WhatsForDinnerMVC.Controllers
                 return RedirectToAction("index", "Login");
             }
             // Return the view from the session if it's there.
-            Menu selectedMenu = (Menu)Session["selectedMenu"];
-            if (selectedMenu != null)
+            // Menu selectedMenu = (Menu)Session["selectedMenu"];
+            if (user.SelectedMenu != null)
             {
-                return View(selectedMenu);
+                return View(user.SelectedMenu);
             }
             // If there wasn't a view in the session, return the selected view.
             return View(user.SelectedMenu);
@@ -50,7 +50,7 @@ namespace WhatsForDinnerMVC.Controllers
             Menu menu = user.SelectedMenu;
             menu.PerformSearch(searchString);
             Session["user"] = user;
-            Session["selectedMenu"] = user.SelectedMenu;
+            //Session["selectedMenu"] = user.SelectedMenu;
             return View("Index", user.SelectedMenu);
         }
 

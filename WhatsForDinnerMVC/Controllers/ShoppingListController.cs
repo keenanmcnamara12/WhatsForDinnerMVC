@@ -19,12 +19,12 @@ namespace WhatsForDinnerMVC.Controllers
 				return RedirectToAction("index", "Login");
 			}
 
-			Menu selectedMenu = (Menu)Session["selectedMenu"];
+			//Menu selectedMenu = (Menu)Session["selectedMenu"];
 
 			ShoppingList newShoppingList;
-			if (selectedMenu != null)
+			if (user.SelectedMenu != null)
 			{
-				newShoppingList = new ShoppingList(selectedMenu.MenuID);
+				newShoppingList = new ShoppingList(user.SelectedMenu.MenuID);
 				return View(newShoppingList);
 			}
 			// If there wasn't a view in the session, return the selected view.

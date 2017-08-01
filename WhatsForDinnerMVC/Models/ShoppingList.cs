@@ -191,18 +191,22 @@ namespace WhatsForDinnerMVC.Models
 
 		private bool doUnitsMatch(string unit1, string unit2)
 		{
-			//if the units are the same string (e.g. cup + cup)
-			if (unit1.Equals(unit2))
-			{
-				return true;
-			}
 
-			List<string> unit1List = getAlternateUnitList(unit1);
-
-			//if the units are two related units return true (e.g. cup + cups)
-			if (unit1List.Contains(unit2))
+			if (unit1 != null && unit2 != null)
 			{
-				return true;
+				//if the units are the same string (e.g. cup + cup)
+				if (unit1.Equals(unit2))
+				{
+					return true;
+				}
+
+				List<string> unit1List = getAlternateUnitList(unit1);
+
+				//if the units are two related units return true (e.g. cup + cups)
+				if (unit1List.Contains(unit2))
+				{
+					return true;
+				}
 			}
 
 			return false;
@@ -399,7 +403,7 @@ namespace WhatsForDinnerMVC.Models
 				alternateUnitList.Add("ears");
 			}
 
-			return null;
+			return alternateUnitList;
 
 
 		}

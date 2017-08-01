@@ -32,5 +32,10 @@ namespace WhatsForDinnerMVC.Controllers
 			return View(newShoppingList);//return View(user.SelectedMenu);
 
 		}
+
+		public ActionResult BackToMenus()
+		{
+			return RedirectToAction("Index", "MenuList");
+		}
 	}
 }

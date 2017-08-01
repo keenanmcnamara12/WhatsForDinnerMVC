@@ -72,17 +72,39 @@ namespace WhatsForDinnerMVC.Controllers
 			return RedirectToAction("Index", "Login");
 		}
 
-        [HttpPost]
-        public ActionResult DeleteSelectedMenu()
-        {
-            User user = (User)Session["user"];
-            if (user == null || !user.IsValid)
-            {
-                return RedirectToAction("index", "Login");
-            }
-            user.DeleteSelectedMenu();
-            Session["user"] = user;
-            return View("Index", user);
-        }
-    }
+		[HttpPost]
+		public ActionResult DeleteSelectedMenu()
+		{
+			User user = (User)Session["user"];
+			if (user == null || !user.IsValid)
+			{
+				return RedirectToAction("index", "Login");
+			}
+			user.DeleteSelectedMenu();
+			Session["user"] = user;
+			return View("Index", user);
+		}
+		public ActionResult Modal()
+		{
+			return RedirectToAction("Index");
+		}
+
+		[HttpPost]
+		public ActionResult GetModalAddRecipe(int id)
+		{
+			User user = (User)Session["user"];
+			if (user == null || !user.IsValid)
+			{
+				return RedirectToAction("index", "Login");
+			}
+			// To prevent the user from needing to select the row then the button, we update the selected menu based on the
+			// row that the clicked button was in.
+			Menu selectedMenu = user.SelectedMenu;
+			selectedMenu.UpdateAddSelectedRecipe(id);
+			user.UpdateSelectedRecipe(id);
+			Session["user"] = user;
+			return PartialView("Modal", user.SelectedRecipe);
+		}
+
+	}
 }

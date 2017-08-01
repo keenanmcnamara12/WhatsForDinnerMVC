@@ -252,6 +252,7 @@
     <Content Include="Views\MenuEdit\Index.cshtml" />
     <Content Include="Views\ShoppingList\Index.cshtml" />
     <Content Include="Views\MenuEdit\Modal.cshtml" />
+    <Content Include="Views\MenuList\Modal.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

@@ -48,8 +48,9 @@ namespace WhatsForDinnerMVC.Models
 		/// <summary>
 		/// The menu ID of the currently selected menu for displaying the recipes 
 		/// </summary>
-		public Menu SelectedMenu{ private set; get; }
+		public Menu SelectedMenu { private set; get; }
 
+		public Recipe SelectedRecipe { set; get; }
 		#endregion
 
 		#region Constructors
@@ -139,9 +140,9 @@ namespace WhatsForDinnerMVC.Models
 
 								bool duplicate = false;
 								// First make sure user doesn't already have this menu in the list.
-								foreach(Menu menu in Menus)
+								foreach (Menu menu in Menus)
 								{
-									
+
 									if (menu.MenuID == menuID)
 									{
 										duplicate = true;
@@ -161,7 +162,7 @@ namespace WhatsForDinnerMVC.Models
 			if (Menus.Count > 0)
 			{
 				SelectedMenu = Menus[0];
-			}   
+			}
 		}
 
 		/// <summary>
@@ -248,11 +249,23 @@ namespace WhatsForDinnerMVC.Models
 		/// <param name="menuID">The newly selected menu ID</param>
 		public void UpdateSelectedMenu(int menuID)
 		{
-			foreach(Menu menu in Menus)
+			foreach (Menu menu in Menus)
 			{
-				if(menu.MenuID == menuID)
+				if (menu.MenuID == menuID)
 				{
 					SelectedMenu = menu;
+					return;
+				}
+			}
+		}
+
+		public void UpdateSelectedRecipe(int recipeId)
+		{
+			foreach (Recipe recipe in SelectedMenu.Recipes)
+			{
+				if (recipe.ID == recipeId)
+				{
+					SelectedRecipe = recipe;
 					return;
 				}
 			}
@@ -282,9 +295,10 @@ namespace WhatsForDinnerMVC.Models
 						cmd.ExecuteNonQuery();
 					}
 				}
-                SelectedMenu = null; // need to remove or the recipes could display in the selected menu table.
+				SelectedMenu = null; // need to remove or the recipes could display in the selected menu table.
 			}
 		}
+
 		#endregion
 	}
 }

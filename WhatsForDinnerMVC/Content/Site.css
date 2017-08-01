@@ -16,7 +16,7 @@
     white-space: normal;
 }
 .shoppingList-table, .shoppingList-header{
-    background-color: rgba(0, 0, 0, 0.4);
+    background-color: rgba(255, 255, 255, 0.8);
     margin:auto;
     display: block;
     width: 40%;
@@ -28,26 +28,30 @@ h1, h2{
 }
 /* Set width on the form input elements since they're 100% wide by default */
 input,
-select{
+select, shoppingList-header{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: #000000;
 }
 .menu-edit, .shopping-list{
     background-image: url(/Images/pexels-photo-349608.jpeg);
+    background-size: cover;
+    background-attachment: fixed;
     min-height: 100%;
     min-width: 100%;
+
 }
 textarea {
     max-width: 280px;
 }
-.menuEdit-row {
-    background-color: rgba(145,135,135, .7);
-}
 
+.modal-content {
+    background-color: rgba(200, 200, 220, .95);
+}
 tr:hover {
     background-color: #ffffff;
 }
-.table-container, .newMenu, .navbar, .navbar-default, .bs-example-navbar-collapse-1, .navbar-form, .form-group{
-    background-color: rgba(0,0,0,.4);
+.table-container, .newMenu, .navbar, .navbar-default, .bs-example-navbar-collapse-1, .navbar-form, .form-group, .menuEdit-row, .table-responsive, .table{
+    background-color: rgba(255,255,255,.8);
 }
 .shoppingList-data {
     font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -55,12 +59,16 @@ tr:hover {
 }
 .menu-list{
     background-image: url(/Images/woodTable.jpeg);
+    background-size: cover;
+    background-attachment: fixed;
     min-height: 100%;
     min-width: 100%;
 }
 #login-register {
 
   background-image: url(/Images/cook-food-kitchen-eat-54455.jpeg);
+  background-size: cover;
+  background-attachment: fixed;
   min-width: 100%;
   min-height: 100%;
 
